@@ -1,0 +1,9 @@
+plugins:
+  - jekyll-seo-tag
+
+title: RCSoftTech Public Projects
+description: Open source Symfony bundles and PHP utilities by RCSoftTech.
+url: "https://rcsofttech85.github.io"
+twitter:
+  username: rcsofttech85
+  card: summary_large_image
