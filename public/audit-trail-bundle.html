@@ -86,10 +86,10 @@
             },
             {
                 "@type": "Question",
-                "name": "How is AuditTrailBundle different from DoctrineAuditBundle?",
+                "name": "What makes AuditTrailBundle unique?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "AuditTrailBundle uses a unique Split-Phase Architecture that captures changes in onFlush but defers dispatching to postFlush, resulting in minimal write overhead. It also supports multiple transports (Doctrine, HTTP, Queue), safe entity revert, and native GDPR-compliant data masking - features not available in traditional audit bundles."
+                    "text": "AuditTrailBundle uses a unique Split-Phase Architecture that captures changes in onFlush but defers dispatching to postFlush, resulting in minimal write overhead. It also supports multiple transports (Doctrine, HTTP, Queue), safe entity revert, and native GDPR-compliant data masking."
                 }
             },
             {
@@ -116,16 +116,16 @@
 
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #1a1a2e 100%);
-            --accent-color: #667eea;
-            --accent-secondary: #764ba2;
-            --accent-glow: rgba(102, 126, 234, 0.4);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --dark-bg: #0f0f1a;
-            --card-bg: rgba(30, 30, 50, 0.8);
+            --primary-gradient: linear-gradient(135deg, #0c1222 0%, #111b30 50%, #0a0f1d 100%);
+            --accent-color: #0ea5e9;
+            --accent-secondary: #06b6d4;
+            --accent-glow: rgba(14, 165, 233, 0.35);
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f1f5f9;
+            --text-secondary: rgba(241, 245, 249, 0.6);
+            --dark-bg: #080d19;
+            --card-bg: rgba(15, 23, 42, 0.85);
             --success-color: #10b981;
             --symfony-color: #000000;
         }
@@ -229,8 +229,8 @@
             right: 0;
             bottom: 0;
             background:
-                radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.3) 0%, transparent 50%);
+                radial-gradient(circle at 20% 80%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.15) 0%, transparent 50%);
             animation: pulseGradient 8s ease-in-out infinite;
         }
 
@@ -275,13 +275,13 @@
         }
 
         .hero h1 span {
-            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+            background: linear-gradient(135deg, #0ea5e9, #06b6d4, #10b981);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             background-size: 200% 200%;
             animation: gradientShift 3s ease infinite;
-            filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.5));
+            filter: drop-shadow(0 0 20px rgba(14, 165, 233, 0.4));
         }
 
         @keyframes gradientShift {
@@ -450,7 +450,7 @@
         .feature-card:hover {
             transform: translateY(-5px);
             border-color: var(--accent-color);
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 20px 40px rgba(14, 165, 233, 0.15);
         }
 
         .feature-icon {
@@ -475,44 +475,7 @@
             line-height: 1.6;
         }
 
-        /* Comparison Table */
-        .comparison-section {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-            border-radius: 24px;
-            padding: 3rem;
-            margin: 3rem 0;
-        }
 
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 2rem;
-        }
-
-        .comparison-table th,
-        .comparison-table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .comparison-table th {
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .comparison-table td:first-child {
-            font-weight: 500;
-        }
-
-        .check {
-            color: var(--success-color);
-        }
-
-        .cross {
-            color: #ef4444;
-        }
 
         /* FAQ Section */
         .faq-grid {
@@ -592,7 +555,7 @@
         .cta-section {
             text-align: center;
             padding: 5rem 2rem;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(6, 182, 212, 0.08) 100%);
             border-radius: 24px;
             margin: 3rem auto;
             max-width: 1200px;
@@ -658,10 +621,6 @@
                 gap: 1.5rem;
             }
 
-            .comparison-table {
-                font-size: 0.85rem;
-            }
-
             .section-header h2 {
                 font-size: 2rem;
             }
@@ -677,7 +636,6 @@
         </a>
         <div class="nav-links">
             <a href="#features">Features</a>
-            <a href="#comparison">Comparison</a>
             <a href="#faq">FAQ</a>
             <a href="https://github.com/rcsofttech85/AuditTrailBundle" class="btn-nav" target="_blank">
                 <i class="fab fa-github"></i> GitHub
@@ -811,78 +769,7 @@
         </div>
     </section>
 
-    <!-- Comparison Section -->
-    <section id="comparison">
-        <div class="comparison-section">
-            <div class="section-header">
-                <h2>Feature Comparison</h2>
-                <p>AuditTrailBundle vs other popular Symfony audit solutions</p>
-            </div>
 
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Feature</th>
-                        <th>AuditTrailBundle</th>
-                        <th>auditor (DamienHarper)</th>
-                        <th>Loggable (Gedmo)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Split-phase architecture (non-blocking)</td>
-                        <td><i class="fas fa-check check"></i></td>
-                        <td><i class="fas fa-times cross"></i> <small
-                                style="color: var(--text-secondary);">Same-transaction</small></td>
-                        <td><i class="fas fa-times cross"></i></td>
-                    </tr>
-                    <tr>
-                        <td>Multiple transports (DB, HTTP, Queue)</td>
-                        <td><i class="fas fa-check check"></i></td>
-                        <td><i class="fas fa-times cross"></i> <small style="color: var(--text-secondary);">DB
-                                only</small></td>
-                        <td><i class="fas fa-times cross"></i></td>
-                    </tr>
-                    <tr>
-                        <td>Entity revert support</td>
-                        <td><i class="fas fa-check check"></i></td>
-                        <td><i class="fas fa-times cross"></i></td>
-                        <td><i class="fas fa-check check"></i></td>
-                    </tr>
-                    <tr>
-                        <td>Sensitive data masking (GDPR)</td>
-                        <td><i class="fas fa-check check"></i></td>
-                        <td><i class="fas fa-times cross"></i></td>
-                        <td><i class="fas fa-times cross"></i></td>
-                    </tr>
-                    <tr>
-                        <td>Collection tracking (M2M, O2M)</td>
-                        <td><i class="fas fa-check check"></i></td>
-                        <td><i class="fas fa-check check"></i></td>
-                        <td><i class="fas fa-times cross"></i></td>
-                    </tr>
-                    <tr>
-                        <td>Impersonation context tracking</td>
-                        <td><i class="fas fa-check check"></i></td>
-                        <td><i class="fas fa-check check"></i> <small style="color: var(--text-secondary);">User +
-                                IP</small></td>
-                        <td><i class="fas fa-times cross"></i></td>
-                    </tr>
-                    <tr>
-                        <td>Doctrine DBAL 4.0+ / ORM 3.0+ support</td>
-                        <td><i class="fas fa-check check"></i></td>
-                        <td><i class="fas fa-check check"></i></td>
-                        <td><i class="fas fa-times cross"></i> <small style="color: var(--text-secondary);">DBAL 3.x
-                                only</small></td>
-                    </tr>
-                </tbody>
-            </table>
-            <p style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-secondary); text-align: center;">
-                <i class="fas fa-info-circle"></i> Information based on official documentation as of January 2026.
-                Please verify with project repositories for the latest features.
-            </p>
-        </div>
-    </section>
 
     <!-- FAQ Section -->
     <section id="faq">
