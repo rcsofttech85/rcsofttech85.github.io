@@ -1,8 +1,8 @@
 plugins:
   - jekyll-seo-tag
 
-title: RCSoftTech Public Projects
-description: Open source Symfony bundles and PHP utilities by RCSoftTech.
+title: Rahul Chavan | Symfony Developer & AuditTrailBundle Creator
+description: Symfony audit bundle documentation, PHP projects, and freelance Symfony development portfolio by Rahul Chavan.
 url: "https://rcsofttech85.github.io"
 twitter:
   username: rcsofttech85

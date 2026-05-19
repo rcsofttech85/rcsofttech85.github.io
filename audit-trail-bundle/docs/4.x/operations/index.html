@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operations | AuditTrailBundle 4.x Documentation</title>
+    <meta name="description"
+        content="Use AuditTrailBundle revert and recovery workflows, CLI commands, exports, integrity verification, and JSON serialization.">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="theme-color" content="#f59e0b">
+    <link rel="canonical" href="https://rcsofttech85.github.io/audit-trail-bundle/docs/4.x/operations/">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/docs.css">
+</head>
+
+<body data-doc-page="operations">
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="../../../../symfony-audit-bundle/">
+                <span class="brand-mark">AT</span>
+                <span class="brand-copy">
+                    <strong>AuditTrailBundle</strong>
+                    <span>4.x documentation</span>
+                </span>
+            </a>
+
+            <div class="top-links" aria-label="Project links">
+                <a href="../../../../symfony-audit-bundle/"><i class="fas fa-arrow-left"></i> Product</a>
+                <a href="https://github.com/rcsofttech85/AuditTrailBundle" target="_blank" rel="noopener">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://packagist.org/packages/rcsofttech/audit-trail-bundle" target="_blank" rel="noopener">
+                    <i class="fas fa-cube"></i> Packagist
+                </a>
+            </div>
+
+            <div class="header-tools">
+                <div class="search-box">
+                    <input class="search-input" type="search" placeholder="Search docs" data-doc-search
+                        aria-label="Search documentation">
+                    <div class="search-results" data-search-results></div>
+                </div>
+                <select class="version-select" data-version-select aria-label="Select documentation version">
+                    <option value="../../current/">current</option>
+                    <option value="../" selected>4.x</option>
+                </select>
+                <button class="mobile-nav-toggle" type="button" data-mobile-nav-toggle aria-label="Toggle docs navigation"
+                    aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="container docs-layout">
+                        <aside class="docs-sidebar" data-docs-nav>
+                <nav class="docs-nav">
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Start</span>
+                        <a href="/audit-trail-bundle/docs/4.x/">Overview</a>
+                        <a href="/audit-trail-bundle/docs/4.x/quick-start/">Quick Start</a>
+                        <a href="/audit-trail-bundle/docs/4.x/configuration/">Configuration</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Transports</span>
+                        <a href="/audit-trail-bundle/docs/4.x/transports/">Transports</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Usage</span>
+                        <a href="/audit-trail-bundle/docs/4.x/usage/">Usage</a>
+                        <a href="/audit-trail-bundle/docs/4.x/admin-security/">Admin & Security</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Operations</span>
+                        <a href="/audit-trail-bundle/docs/4.x/operations/">Operations</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Reference</span>
+                        <a href="/audit-trail-bundle/docs/4.x/upgrade-architecture/">Upgrade & Architecture</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Links</span>
+                        <a href="/">Home Portfolio</a>
+                        <a href="/symfony-audit-bundle/">Product Home</a>
+                    </div>
+                </nav>
+            </aside>
+
+            <article class="doc-content">
+                <section class="doc-hero">
+                    <span class="eyebrow">Operations</span>
+                    <h1>Recover, export, verify, and consume audit logs.</h1>
+                    <p class="lead">Use the bundle's recovery tooling, CLI commands, and stable JSON payload shape to
+                        make audit data useful after it has been written.</p>
+                    <div class="doc-meta">
+                        <span class="badge is-current">4.x</span>
+                        <span class="badge">Revert</span>
+                        <span class="badge">CLI</span>
+                        <span class="badge">Serialization</span>
+                    </div>
+                </section>
+
+                <section class="doc-section" id="revert-recovery">
+                    <h2>Revert & Recovery</h2>
+                    <p>AuditTrailBundle can revert an entity to an earlier audited state. Use it after reviewing the
+                        history for a bad import, accidental update, mistaken delete, or failed admin action.</p>
+
+                    <pre><code class="language-bash"># Revert an entity to its state in a specific audit log
+php bin/console audit:revert &lt;audit-log-uuid&gt;
+
+# Add recovery context
+php bin/console audit:revert &lt;audit-log-uuid&gt; \
+    --context='{"reason":"restore customer address","ticket":"SUPPORT-1234"}'
+
+# Preview first when recovering important data
+php bin/console audit:revert &lt;audit-log-uuid&gt; --dry-run</code></pre>
+
+                    <h3 id="revert-in-code">Revert In Code</h3>
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+$auditReverter-&gt;revert($log, dryRun: false, force: false, context: [
+    'reason' =&gt; 'restore customer address',
+    'ticket_id' =&gt; 'SUPPORT-1234',
+]);</code></pre>
+
+                    <p>By default, <code>AuditReverter</code> silences the normal subscriber while it writes the
+                        explicit <code>revert</code> audit. This avoids a duplicate technical <code>update</code> log.
+                        Pass <code>silenceSubscriber: false</code> when strict compliance or debugging requires the
+                        normal technical log too.</p>
+
+                    <pre><code class="language-php">$auditReverter-&gt;revert(
+    $log,
+    dryRun: false,
+    force: false,
+    context: [],
+    silenceSubscriber: false,
+);</code></pre>
+
+                    <ul>
+                        <li>EasyAdmin shows the revert button only for the latest meaningful state-changing log.</li>
+                        <li>The explicit revert audit points back to the original entry through
+                            <code>reverted_log_id</code>.</li>
+                        <li>Soft-delete restore clears the configured nullable timestamp-like
+                            <code>soft_delete_field</code>.</li>
+                        <li>Use custom revert handlers for action-specific restore logic.</li>
+                    </ul>
+
+                    <p>Revert audits follow the same transport rules as other audit logs. In-transaction transports can
+                        roll back with the entity revert when <code>fail_on_transport_error: true</code>. Deferred-only
+                        transports such as HTTP and queue run only after the entity change commits successfully.</p>
+
+                    <h3 id="custom-revert-handlers">Custom Revert Handlers</h3>
+                    <p>Implement <code>RevertActionHandlerInterface</code> for action-specific restore logic.
+                        Implementations are auto-tagged when Symfony autoconfiguration is enabled, so you normally do
+                        not need to add the <code>audit_trail.revert_action_handler</code> tag manually.</p>
+
+                    <p>EasyAdmin uses the same dry-run path for its revert preview. To-many relations are shown as
+                        readable collections, UUID-backed relations are previewed safely, and inverse-side collection
+                        restores synchronize owning relations so persisted reverts match the preview more reliably.</p>
+                </section>
+
+                <section class="doc-section" id="cli-commands">
+                    <h2>CLI Commands</h2>
+                    <h3 id="list-logs">List Audit Logs</h3>
+                    <pre><code class="language-bash">php bin/console audit:list --entity=User --action=update --limit=50</code></pre>
+
+                    <h3 id="purge-logs">Purge Old Logs</h3>
+                    <pre><code class="language-bash">php bin/console audit:purge --before="30 days ago" --force</code></pre>
+                    <p>If integrity signing is enabled, purge verifies matching logs before deletion unless you pass
+                        <code>--skip-integrity</code>. The purge verification path streams matching rows instead of
+                        eager-loading large result sets.</p>
+
+                    <h3 id="export-logs">Export Logs</h3>
+                    <pre><code class="language-bash">php bin/console audit:export --format=json --output=audits.json</code></pre>
+                    <p>Use CLI export for large or full-history exports. EasyAdmin export applies active filters and is
+                        capped by <code>easyadmin.export_limit</code>.</p>
+
+                    <h3 id="diff-command">View Diff</h3>
+                    <pre><code class="language-bash"># By entity class and ID
+php bin/console audit:diff 'App\Entity\User' 42
+
+# Or by audit log UUID
+php bin/console audit:diff &lt;audit-log-uuid&gt; --json</code></pre>
+
+                    <h3 id="verify-command">Verify Integrity</h3>
+                    <pre><code class="language-bash"># Verify all logs
+php bin/console audit:verify-integrity
+
+# Verify one log
+php bin/console audit:verify-integrity --id=&lt;audit-log-uuid&gt;</code></pre>
+
+                    <h3 id="command-options">Useful Options</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Command</th>
+                                <th>Options Developers Commonly Need</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>audit:list</code></td>
+                                <td><code>--entity</code>, <code>--entity-id</code>, <code>--user</code>,
+                                    <code>--transaction</code>, <code>--from</code>, <code>--to</code>,
+                                    <code>--details</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>audit:export</code></td>
+                                <td><code>--format=json|csv</code>, <code>--output</code>, <code>--limit</code>,
+                                    <code>--entity</code>, <code>--action</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>audit:revert</code></td>
+                                <td><code>--dry-run</code>, <code>--force</code>, <code>--user</code>,
+                                    <code>--context</code>, <code>--noisy</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>audit:purge</code></td>
+                                <td><code>--dry-run</code>, <code>--before</code>, <code>--force</code>,
+                                    <code>--skip-integrity</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>For console-triggered audits, IP handling is conservative. The bundle prefers valid values such
+                        as <code>AUDIT_TRAIL_CLI_IP</code>, <code>SSH_CLIENT</code>, or
+                        <code>SSH_CONNECTION</code>; if no valid IP is available, it stores <code>null</code>.</p>
+                </section>
+
+                <section class="doc-section" id="serialization">
+                    <h2>Serialization</h2>
+                    <p><code>AuditLogMessageSerializer</code> emits a flat JSON payload so queue or HTTP consumers can
+                        process audit logs outside the Symfony application.</p>
+
+                    <pre><code class="language-json">{
+  "entity_class": "App\\Entity\\User",
+  "entity_id": "123",
+  "action": "update",
+  "old_values": { "status": "pending" },
+  "new_values": { "status": "approved" },
+  "changed_fields": ["status"],
+  "user_id": "42",
+  "username": "admin",
+  "ip_address": "127.0.0.1",
+  "user_agent": "Mozilla/5.0",
+  "transaction_hash": "019e05e8-e794-7797-bf4f-8286f65a18cd",
+  "created_at": "2024-01-20T12:00:00+00:00",
+  "signature": "entity-hmac-signature-here",
+  "delivery_id": null,
+  "reverted_log_id": null,
+  "context": { "source": "checkout" }
+}</code></pre>
+
+                    <div class="callout">
+                        <p>The serializer is encode-only. Consumers should treat the payload as plain JSON and read
+                            transport-level signatures from HTTP headers or Messenger stamps. Queue delivery can carry
+                            <code>X-Audit-Api-Key</code> and <code>X-Audit-Signature</code> headers when the matching
+                            stamps are present; HTTP delivery uses the <code>X-Signature</code> header when integrity is
+                            enabled.</p>
+                    </div>
+                </section>
+
+
+            </article>
+
+            <aside class="docs-toc" data-page-toc></aside>
+        </div>
+    </main>
+
+    <footer class="docs-footer">
+        <div class="container footer-inner">
+            <p><strong>AuditTrailBundle</strong> documentation for 4.x</p>
+            <p>Copyright <span data-year></span>. Built by Rahul Chavan.</p>
+        </div>
+    </footer>
+
+    <script src="../../assets/docs.js"></script>
+</body>
+
+</html>

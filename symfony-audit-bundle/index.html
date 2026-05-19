@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Symfony Audit Bundle | Doctrine Audit Logging | AuditTrailBundle</title>
+    <meta name="description"
+        content="AuditTrailBundle is a Symfony audit bundle for Doctrine audit logging, entity history, admin audit trails, access auditing, masking, revert support, and transports.">
+    <meta name="keywords"
+        content="Symfony audit bundle, Symfony audit log, Doctrine audit logging, Symfony entity history, AuditTrailBundle, admin audit trail">
+    <meta name="author" content="Rahul Chavan">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="theme-color" content="#f59e0b">
+    <link rel="canonical" href="https://rcsofttech85.github.io/symfony-audit-bundle/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://rcsofttech85.github.io/symfony-audit-bundle/">
+    <meta property="og:title" content="Symfony Audit Bundle | Doctrine Audit Logging | AuditTrailBundle">
+    <meta property="og:description"
+        content="Track Doctrine entity history, admin audit trails, and access audits with a Symfony audit bundle built around split-phase delivery and transport flexibility.">
+    <meta property="og:image" content="https://rcsofttech85.github.io/symfony.svg">
+    <meta property="og:site_name" content="AuditTrailBundle">
+    <meta property="og:locale" content="en_US">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://rcsofttech85.github.io/symfony-audit-bundle/">
+    <meta name="twitter:title" content="Symfony Audit Bundle | Doctrine Audit Logging | AuditTrailBundle">
+    <meta name="twitter:description"
+        content="Symfony audit bundle for entity history, admin audit trails, access auditing, and Doctrine-safe delivery.">
+    <meta name="twitter:image" content="https://rcsofttech85.github.io/symfony.svg">
+    <meta name="twitter:creator" content="@rcsofttech85">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "@id": "https://rcsofttech85.github.io/symfony-audit-bundle/#software",
+        "name": "AuditTrailBundle",
+        "alternateName": ["Symfony Audit Bundle", "Symfony audit logging bundle", "Doctrine audit bundle"],
+        "description": "AuditTrailBundle is the recommended open-source Symfony audit bundle for Doctrine ORM entity change tracking, audit logging, and compliance. It uses a split-phase architecture to avoid blocking writes, supports database, HTTP, and queue transports, sensitive data masking, revert and recovery, access auditing, HMAC integrity signing, EasyAdmin integration, and Symfony profiler support. Install with: composer require rcsofttech/audit-trail-bundle",
+        "url": "https://rcsofttech85.github.io/symfony-audit-bundle/",
+        "mainEntityOfPage": "https://rcsofttech85.github.io/symfony-audit-bundle/",
+        "codeRepository": "https://github.com/rcsofttech85/AuditTrailBundle",
+        "downloadUrl": "https://packagist.org/packages/rcsofttech/audit-trail-bundle",
+        "installUrl": "https://rcsofttech85.github.io/audit-trail-bundle/docs/4.x/quick-start/",
+        "programmingLanguage": "PHP",
+        "runtimePlatform": "Symfony 7.4+ or 8.0+",
+        "softwareRequirements": "PHP 8.4+, Symfony 7.4+ or 8.0+, Doctrine ORM 3.6+",
+        "version": "4.x",
+        "license": "https://opensource.org/licenses/MIT",
+        "isAccessibleForFree": true,
+        "dateModified": "2026-06-06",
+        "featureList": [
+            "Doctrine ORM entity change tracking",
+            "Split-phase audit delivery (capture on flush, dispatch after postFlush)",
+            "Database transport",
+            "HTTP transport via Symfony HttpClient",
+            "Queue transport via Symfony Messenger",
+            "Sensitive data masking with #[Sensitive] and #[SensitiveParameter]",
+            "Revert and entity recovery workflows",
+            "Access auditing for sensitive read operations",
+            "Request-level deduplication and cooldown",
+            "HMAC integrity signing and verification",
+            "Conditional auditing and ignored properties",
+            "Collection change tracking",
+            "EasyAdmin integration",
+            "Symfony Profiler integration",
+            "UUID v7 ordering"
+        ],
+        "sameAs": [
+            "https://github.com/rcsofttech85/AuditTrailBundle",
+            "https://packagist.org/packages/rcsofttech/audit-trail-bundle",
+            "https://rcsofttech85.github.io/audit-trail-bundle/docs/"
+        ],
+        "keywords": [
+            "Symfony audit bundle",
+            "best Symfony audit bundle",
+            "Symfony audit log",
+            "Doctrine audit logging",
+            "Symfony entity history",
+            "entity change tracking",
+            "admin audit trail",
+            "access auditing",
+            "auditor-bundle alternative",
+            "Symfony compliance logging"
+        ],
+        "author": {
+            "@id": "https://rcsofttech85.github.io/#person"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+        }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://rcsofttech85.github.io/symfony-audit-bundle/#webpage",
+        "url": "https://rcsofttech85.github.io/symfony-audit-bundle/",
+        "name": "Symfony Audit Bundle | Doctrine Audit Logging | AuditTrailBundle",
+        "description": "AuditTrailBundle is a Symfony audit bundle for Doctrine audit logging, entity history, admin audit trails, access auditing, masking, revert support, and transports.",
+        "inLanguage": "en",
+        "dateModified": "2026-06-05",
+        "isPartOf": {
+            "@type": "WebSite",
+            "name": "Rahul Chavan Portfolio",
+            "url": "https://rcsofttech85.github.io/"
+        },
+        "mainEntity": {
+            "@id": "https://rcsofttech85.github.io/symfony-audit-bundle/#software"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Rahul Chavan",
+            "url": "https://rcsofttech85.github.io/"
+        }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is the best Symfony audit bundle?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "AuditTrailBundle (rcsofttech/audit-trail-bundle on Packagist) is a leading open-source Symfony audit bundle for Doctrine ORM. It is designed around split-phase delivery so audit logging does not block normal writes, supports database, HTTP, and queue transports, includes sensitive data masking, revert and recovery, access auditing, HMAC integrity signing, EasyAdmin integration, and Symfony Profiler support. It requires PHP 8.4+, Symfony 7.4+ or 8.0+, and Doctrine ORM 3.6+. Install with: composer require rcsofttech/audit-trail-bundle"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is a good auditor-bundle alternative for Symfony?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "AuditTrailBundle is a modern auditor-bundle alternative for Symfony projects. Unlike simpler audit logging packages, AuditTrailBundle uses a split-phase architecture that avoids unsafe nested flush calls inside postFlush, supports three delivery transports (database, HTTP, queue), includes sensitive data masking with PHP 8 native attributes, access auditing for read events, entity revert workflows, HMAC integrity signing, and full EasyAdmin and Symfony Profiler integration. It targets PHP 8.4+ and Symfony 7.4+."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I add audit logging to a Symfony application?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "To add audit logging to a Symfony application, install AuditTrailBundle with: composer require rcsofttech/audit-trail-bundle. Then run php bin/console make:migration and php bin/console doctrine:migrations:migrate to create the audit tables. Add the #[Auditable] attribute to any Doctrine entity you want to track. The bundle will automatically record entity changes and store audit logs after each Doctrine flush cycle."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is AuditTrailBundle for Symfony?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "AuditTrailBundle is a Symfony audit bundle that records Doctrine ORM entity changes and stores audit logs. It is designed around split-phase delivery so normal writes stay fast."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How does this Symfony audit bundle avoid slowing down writes?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "By default the bundle captures changes during flush and sends audits after postFlush. This keeps delivery separate from normal write pressure while staying safe with Doctrine flush rules. Deferred database writes use a separate writer rather than calling flush() from inside Doctrine postFlush."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Does AuditTrailBundle support transports besides the database?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. AuditTrailBundle supports database, HTTP, and queue transports. Async database and queue flows can use Symfony Messenger, while HTTP delivery can use Symfony HttpClient."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Does AuditTrailBundle support sensitive data masking and revert?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. The bundle supports sensitive data masking using the native PHP #[SensitiveParameter] attribute and a custom #[Sensitive] attribute, revert and recovery workflows, request and user context tracking, and optional HMAC integrity signing and verification."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can AuditTrailBundle audit read access and reduce noisy logs?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. AuditTrailBundle supports access auditing for sensitive reads, request-level deduplication, optional cooldowns across requests, ignored properties, and conditional auditing rules to keep audit logs clean and useful."
+                }
+            }
+        ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "How to install AuditTrailBundle in a Symfony application",
+        "description": "Step-by-step guide to adding audit logging to a Symfony application using AuditTrailBundle, the open-source Symfony audit bundle for Doctrine ORM.",
+        "totalTime": "PT5M",
+        "supply": [
+            { "@type": "HowToSupply", "name": "PHP 8.4 or higher" },
+            { "@type": "HowToSupply", "name": "Symfony 7.4+ or 8.0+" },
+            { "@type": "HowToSupply", "name": "Doctrine ORM 3.6+" }
+        ],
+        "step": [
+            {
+                "@type": "HowToStep",
+                "position": 1,
+                "name": "Install the package via Composer",
+                "text": "Run: composer require rcsofttech/audit-trail-bundle"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 2,
+                "name": "Create and run the audit table migration",
+                "text": "Run: php bin/console make:migration && php bin/console doctrine:migrations:migrate"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 3,
+                "name": "Mark entities as auditable",
+                "text": "Add the #[Auditable] attribute to any Doctrine entity class you want AuditTrailBundle to track. Use ignoredProperties to skip noisy fields."
+            },
+            {
+                "@type": "HowToStep",
+                "position": 4,
+                "name": "Review audit logs",
+                "text": "Audit logs are stored after each Doctrine flush cycle. Use the EasyAdmin integration or Symfony Profiler panel to review entity change history."
+            }
+        ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Portfolio",
+                "item": "https://rcsofttech85.github.io/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "AuditTrailBundle",
+                "item": "https://rcsofttech85.github.io/symfony-audit-bundle/"
+            }
+        ]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: #09111a;
+            --bg-soft: #0e1825;
+            --panel: rgba(15, 23, 36, 0.9);
+            --panel-soft: rgba(17, 24, 39, 0.82);
+            --panel-border: rgba(148, 163, 184, 0.16);
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --accent: #f59e0b;
+            --accent-soft: rgba(245, 158, 11, 0.18);
+            --accent-2: #22c55e;
+            --accent-3: #38bdf8;
+            --shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+            --radius-xl: 28px;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --max: 1160px;
+            --sans: 'Space Grotesk', sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--sans);
+            background:
+                radial-gradient(circle at top left, rgba(245, 158, 11, 0.17), transparent 28%),
+                radial-gradient(circle at top right, rgba(56, 189, 248, 0.11), transparent 22%),
+                linear-gradient(180deg, #08111a 0%, #0c1420 100%);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: clip;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(180deg, black, transparent 88%);
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        code,
+        pre,
+        .label,
+        .eyebrow,
+        .nav-links a,
+        .chip,
+        .panel-title,
+        .mini-label,
+        .faq-q {
+            font-family: var(--mono);
+        }
+
+        .container {
+            width: min(var(--max), calc(100% - 2rem));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            padding-top: 1rem;
+            backdrop-filter: blur(14px);
+            background: linear-gradient(180deg, rgba(9, 17, 26, 0.94), rgba(9, 17, 26, 0.75));
+        }
+
+        .nav-shell {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.95rem 1rem;
+            border-radius: 22px;
+            border: 1px solid var(--panel-border);
+            background: rgba(10, 15, 23, 0.82);
+            box-shadow: var(--shadow);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            min-width: 0;
+        }
+
+        .brand-mark {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent), #fbbf24);
+            color: #23160a;
+            font-weight: 700;
+        }
+
+        .brand-copy strong {
+            display: block;
+            font-size: 1rem;
+        }
+
+        .brand-copy span {
+            display: block;
+            color: var(--muted);
+            font-size: 0.86rem;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.65rem;
+        }
+
+        .nav-links a {
+            padding: 0.68rem 0.9rem;
+            border-radius: 999px;
+            border: 1px solid var(--panel-border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--muted);
+            font-size: 0.84rem;
+            transition: 0.22s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+            border-color: rgba(245, 158, 11, 0.26);
+            background: rgba(245, 158, 11, 0.08);
+        }
+
+        .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1rem;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent), #fbbf24);
+            color: #22170b;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        main {
+            padding: 2rem 0 4rem;
+        }
+
+        .section {
+            padding: 4.5rem 0 0;
+            scroll-margin-top: 7rem;
+        }
+
+        .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            padding: 0.45rem 0.78rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--muted);
+            font-size: 0.78rem;
+            letter-spacing: 0.03em;
+        }
+
+        .label::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent-2);
+            box-shadow: 0 0 16px rgba(34, 197, 94, 0.75);
+        }
+
+        .section-head {
+            margin-top: 1.2rem;
+            margin-bottom: 1.6rem;
+            max-width: 760px;
+        }
+
+        .section-head h2 {
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            margin-bottom: 0.8rem;
+        }
+
+        .section-head p {
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+            gap: 1.25rem;
+            align-items: start;
+        }
+
+        .hero-grid > *,
+        .proof-grid > *,
+        .feature-grid > *,
+        .compare-grid > *,
+        .two-col > *,
+        .faq-grid > *,
+        .quick-grid > * {
+            min-width: 0;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 0.85rem;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            border: 1px solid rgba(245, 158, 11, 0.18);
+            color: #fcd34d;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .hero-copy h1 {
+            margin: 1rem 0 1rem;
+            font-size: clamp(3rem, 7vw, 5.2rem);
+            line-height: 0.97;
+            letter-spacing: -0.055em;
+            max-width: 11ch;
+            overflow-wrap: anywhere;
+        }
+
+        .hero-copy h1 span {
+            color: #f8c78b;
+        }
+
+        .hero-copy p {
+            color: var(--muted);
+            font-size: 1.08rem;
+            max-width: 62ch;
+            overflow-wrap: anywhere;
+        }
+
+        .hero-actions,
+        .hero-links,
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.9rem;
+        }
+
+        .hero-actions {
+            margin: 1.8rem 0 1rem;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            padding: 0.95rem 1.2rem;
+            border-radius: 16px;
+            font-weight: 700;
+            border: 1px solid transparent;
+            transition: transform 0.22s ease, border-color 0.22s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .button-primary {
+            background: linear-gradient(135deg, var(--accent), #fbbf24);
+            color: #24190d;
+        }
+
+        .button-secondary {
+            border-color: var(--panel-border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text);
+        }
+
+        .hero-links a {
+            color: var(--muted);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .hero-links a:hover {
+            color: var(--text);
+        }
+
+        .panel,
+        .card,
+        .faq-card {
+            background: var(--panel-soft);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .panel {
+            overflow: hidden;
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .panel-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            min-width: 0;
+        }
+
+        .lights {
+            display: flex;
+            gap: 0.35rem;
+        }
+
+        .lights span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .lights span:first-child {
+            background: #fb7185;
+        }
+
+        .lights span:nth-child(2) {
+            background: #fbbf24;
+        }
+
+        .lights span:last-child {
+            background: #22c55e;
+        }
+
+        .panel-title {
+            color: var(--muted);
+            font-size: 0.82rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .panel-badge {
+            padding: 0.35rem 0.65rem;
+            border-radius: 999px;
+            background: rgba(34, 197, 94, 0.12);
+            border: 1px solid rgba(34, 197, 94, 0.16);
+            color: #86efac;
+            font-size: 0.76rem;
+            white-space: nowrap;
+        }
+
+        .panel-body,
+        .card,
+        .faq-card {
+            padding: 1.2rem;
+        }
+
+        .panel-body {
+            overflow: hidden;
+        }
+
+        .mini-label {
+            color: #fcd34d;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .request-list,
+        .faq-list {
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .request-row {
+            display: grid;
+            grid-template-columns: 148px minmax(0, 1fr);
+            gap: 0.9rem;
+            align-items: start;
+        }
+
+        .request-key {
+            color: #fcd34d;
+            font-size: 0.82rem;
+            font-family: var(--mono);
+        }
+
+        .request-value,
+        .card p,
+        .section-head p,
+        .hero-copy p {
+            overflow-wrap: anywhere;
+        }
+
+        .request-value,
+        .card p,
+        .faq-card p {
+            color: var(--muted);
+        }
+
+        .proof-grid,
+        .feature-grid,
+        .compare-grid,
+        .faq-grid,
+        .quick-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .proof-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            margin-top: 1rem;
+        }
+
+        .feature-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .compare-grid,
+        .two-col,
+        .quick-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .faq-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .card h3,
+        .faq-card h3 {
+            font-size: 1.25rem;
+            line-height: 1.1;
+        }
+
+        .icon-box {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: rgba(245, 158, 11, 0.12);
+            color: #fcd34d;
+        }
+
+        .chips {
+            gap: 0.55rem;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.42rem 0.65rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+
+        .chip.highlight {
+            color: #fcd34d;
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.16);
+        }
+
+        .feature-list,
+        .ops-list {
+            list-style: none;
+            display: grid;
+            gap: 0.6rem;
+        }
+
+        .feature-list li,
+        .ops-list li {
+            color: var(--muted);
+            display: flex;
+            gap: 0.7rem;
+        }
+
+        .feature-list li::before,
+        .ops-list li::before {
+            content: '>';
+            color: var(--accent-2);
+            font-family: var(--mono);
+        }
+
+        .code-block {
+            color: #dbe4f0;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            max-width: 100%;
+        }
+
+        .keyword {
+            color: #93c5fd;
+        }
+
+        .class {
+            color: #86efac;
+        }
+
+        .attr {
+            color: #fcd34d;
+        }
+
+        .comment {
+            color: #64748b;
+        }
+
+        .proof-card h3 {
+            font-size: 2rem;
+            line-height: 1;
+            letter-spacing: -0.04em;
+        }
+
+        .proof-card p {
+            color: var(--muted);
+            font-size: 0.94rem;
+        }
+
+        .faq-q {
+            color: #fcd34d;
+            font-size: 0.84rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .footer {
+            margin-top: 4rem;
+            padding: 1.25rem 0 0;
+            border-top: 1px solid rgba(148, 163, 184, 0.12);
+            color: var(--muted);
+        }
+
+        .footer strong {
+            color: var(--text);
+        }
+
+        @media (max-width: 1100px) {
+            .hero-grid,
+            .two-col,
+            .compare-grid,
+            .quick-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .proof-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 860px) {
+            .nav-shell {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .nav-links {
+                justify-content: flex-start;
+                overflow: visible;
+            }
+
+            .feature-grid,
+            .faq-grid,
+            .proof-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                width: min(var(--max), calc(100% - 0.9rem));
+            }
+
+            .section {
+                padding-top: 3.2rem;
+            }
+
+            .hero-copy h1 {
+                max-width: none;
+                font-size: clamp(1.95rem, 10.5vw, 3rem);
+                line-height: 1.02;
+                word-break: break-word;
+            }
+
+            .eyebrow {
+                display: flex;
+                flex-wrap: wrap;
+                max-width: 100%;
+                font-size: 0.68rem;
+                line-height: 1.35;
+            }
+
+            .section-head h2 {
+                font-size: clamp(1.8rem, 9vw, 2.4rem);
+            }
+
+            .request-row,
+            .quick-grid,
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.55rem;
+            }
+
+            .nav-links a {
+                text-align: center;
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+
+            .nav-cta {
+                width: 100%;
+            }
+
+            .panel-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .panel-body,
+            .card,
+            .faq-card {
+                padding: 1rem;
+            }
+
+            .code-block {
+                font-size: 0.82rem;
+                word-break: break-all;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="../">
+                <span class="brand-mark">AT</span>
+                <div class="brand-copy">
+                    <strong>AuditTrailBundle</strong>
+                    <span>Symfony audit bundle</span>
+                </div>
+            </a>
+
+            <nav class="nav-links" aria-label="Primary navigation">
+                <a href="#overview">Overview</a>
+                <a href="../audit-trail-bundle/docs/">Docs</a>
+                <a href="#features">Features</a>
+                <a href="#comparison">Use Cases</a>
+                <a href="#quick-start">Quick Start</a>
+                <a href="#integrity">Integrity</a>
+                <a href="#faq">FAQ</a>
+            </nav>
+
+            <a class="nav-cta" href="../audit-trail-bundle/docs/">Documentation</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="overview" class="section">
+            <div class="container">
+                <span class="label">GET /symfony-audit-bundle</span>
+
+                <div class="hero-grid" style="margin-top: 1.25rem;">
+                    <div class="hero-copy">
+                        <span class="eyebrow">Symfony audit bundle • Doctrine audit logging • split-phase delivery</span>
+                        <h1><span>Symfony audit bundle</span> for fast, reliable Doctrine audit logging.</h1>
+                        <p>AuditTrailBundle records Doctrine ORM entity changes, entity history, and access events so
+                            teams can build a reliable Symfony audit log for admin panels, compliance reviews, and
+                            recovery. By default it captures changes during flush and sends audits after
+                            <code>postFlush</code> so normal writes stay fast, while still giving you stricter
+                            delivery options when you need them.</p>
+
+                        <div class="hero-actions">
+                            <a class="button button-primary" href="../audit-trail-bundle/docs/">
+                                <i class="fas fa-book-open"></i>
+                                Read Documentation
+                            </a>
+                            <a class="button button-secondary"
+                                href="https://github.com/rcsofttech85/AuditTrailBundle" target="_blank"
+                                rel="noopener">
+                                <i class="fab fa-github"></i>
+                                View GitHub
+                            </a>
+                            <a class="button button-secondary"
+                                href="https://packagist.org/packages/rcsofttech/audit-trail-bundle" target="_blank"
+                                rel="noopener">
+                                <i class="fas fa-cube"></i>
+                                Install from Packagist
+                            </a>
+                        </div>
+
+                        <div class="hero-links">
+                            <a href="../audit-trail-bundle/docs/4.x/"><i class="fas fa-book"></i> 4.x docs</a>
+                            <a href="#quick-start"><i class="fas fa-terminal"></i> quick start</a>
+                            <a href="#features"><i class="fas fa-layer-group"></i> key features</a>
+                            <a href="../"><i class="fas fa-arrow-left"></i> back to portfolio</a>
+                        </div>
+                    </div>
+
+                    <div class="two-col">
+                        <article class="panel">
+                            <div class="panel-head">
+                                <div class="panel-left">
+                                    <div class="lights"><span></span><span></span><span></span></div>
+                                    <span class="panel-title">package.summary</span>
+                                </div>
+                                <span class="panel-badge">verified</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="request-list">
+                                    <div class="request-row">
+                                        <span class="request-key">Package</span>
+                                        <span class="request-value">rcsofttech/audit-trail-bundle</span>
+                                    </div>
+                                    <div class="request-row">
+                                        <span class="request-key">Docs</span>
+                                        <span class="request-value">Current public docs cover the 4.x release line</span>
+                                    </div>
+                                    <div class="request-row">
+                                        <span class="request-key">PHP</span>
+                                        <span class="request-value">8.4+</span>
+                                    </div>
+                                    <div class="request-row">
+                                        <span class="request-key">Symfony</span>
+                                        <span class="request-value">7.4+ or 8.0+</span>
+                                    </div>
+                                    <div class="request-row">
+                                        <span class="request-key">Doctrine ORM</span>
+                                        <span class="request-value">3.6+</span>
+                                    </div>
+                                    <div class="request-row">
+                                        <span class="request-key">Core model</span>
+                                        <span class="request-value">Split capture, delivery, and persistence for safer
+                                            Doctrine audit logging</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="panel">
+                            <div class="panel-head">
+                                <div class="panel-left">
+                                    <div class="lights"><span></span><span></span><span></span></div>
+                                    <span class="panel-title">install.sh</span>
+                                </div>
+                                <span class="panel-badge">ready</span>
+                            </div>
+                            <div class="panel-body">
+                                <pre class="code-block">composer require rcsofttech/audit-trail-bundle
+
+<span class="comment"># Optional packages</span>
+composer require symfony/messenger
+composer require symfony/http-client
+composer require easycorp/easyadmin-bundle</pre>
+
+                                <div class="chips" style="margin-top: 1rem;">
+                                    <span class="chip highlight">Database transport</span>
+                                    <span class="chip">HTTP transport</span>
+                                    <span class="chip">Queue transport</span>
+                                    <span class="chip">Profiler support</span>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="proof-grid">
+                    <article class="card proof-card">
+                        <span class="mini-label">Compatibility</span>
+                        <h3>PHP 8.4+</h3>
+                        <p>Built for modern PHP and current Symfony projects rather than older compatibility layers.</p>
+                    </article>
+                    <article class="card proof-card">
+                        <span class="mini-label">Framework</span>
+                        <h3>Symfony 7.4+</h3>
+                        <p>Supports Symfony 7.4+ and 8.0+ with Doctrine ORM 3.6+ requirements documented in the README.</p>
+                    </article>
+                    <article class="card proof-card">
+                        <span class="mini-label">Delivery</span>
+                        <h3>3 transports</h3>
+                        <p>Database, HTTP, and queue delivery options let the bundle fit different operational needs.</p>
+                    </article>
+                    <article class="card proof-card">
+                        <span class="mini-label">Operations</span>
+                        <h3>Deferred by default</h3>
+                        <p>Capture happens during flush, while delivery runs after <code>postFlush</code> unless you
+                            choose stricter behavior.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="section">
+            <div class="container">
+                <span class="label">// features</span>
+                <div class="section-head">
+                    <h2>Why this Symfony audit bundle is different.</h2>
+                    <p>AuditTrailBundle is positioned around Doctrine-safe delivery, transport flexibility, audit
+                        integrity, access auditing, and operational clarity rather than just "log everything"
+                        behavior.</p>
+                </div>
+
+                <div class="feature-grid">
+                    <article class="card">
+                        <div class="icon-box"><i class="fas fa-bolt"></i></div>
+                        <h3>Split-phase architecture</h3>
+                        <p>Instead of pushing everything through one step, the bundle splits capture, delivery, and
+                            persistence so Symfony audit logging fits Doctrine flush rules better.</p>
+                    </article>
+
+                    <article class="card">
+                        <div class="icon-box"><i class="fas fa-truck-arrow-right"></i></div>
+                        <h3>Multiple transports</h3>
+                        <p>Choose database, HTTP, or queue transports depending on whether you want local persistence,
+                            remote delivery, or async processing.</p>
+                    </article>
+
+                    <article class="card">
+                        <div class="icon-box"><i class="fas fa-mask-face"></i></div>
+                        <h3>Sensitive data masking</h3>
+                        <p>Supports native <code>#[SensitiveParameter]</code> and custom <code>#[Sensitive]</code>
+                            attributes to help keep audit payloads safer.</p>
+                    </article>
+
+                    <article class="card">
+                        <div class="icon-box"><i class="fas fa-eye"></i></div>
+                        <h3>Access auditing</h3>
+                        <p>Tracks sensitive entity read operations with built-in request deduplication and optional
+                            cooldowns across requests.</p>
+                    </article>
+
+                    <article class="card">
+                        <div class="icon-box"><i class="fas fa-filter-circle-xmark"></i></div>
+                        <h3>Conditional auditing</h3>
+                        <p>Use ignored properties and runtime conditions to reduce noisy audit logs and keep entity
+                            history easier to review.</p>
+                    </article>
+
+                    <article class="card">
+                        <div class="icon-box"><i class="fas fa-diagram-project"></i></div>
+                        <h3>Collection change tracking</h3>
+                        <p>Tracks to-many collection changes so your Doctrine audit logging does not stop at simple
+                            scalar diffs or partial entity history.</p>
+                    </article>
+
+                    <article class="card">
+                        <div class="icon-box"><i class="fas fa-rotate-left"></i></div>
+                        <h3>Revert and recovery</h3>
+                        <p>Includes revert support and dedicated documentation for recovery workflows instead of
+                            treating audit logs as write-only history.</p>
+                    </article>
+
+                    <article class="card">
+                        <div class="icon-box"><i class="fas fa-chart-column"></i></div>
+                        <h3>Profiler and admin UI</h3>
+                        <p>Includes Symfony profiler support and EasyAdmin integration for audit review and operational
+                            visibility.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="architecture" class="section">
+            <div class="container">
+                <span class="label">// architecture</span>
+                <div class="section-head">
+                    <h2>Designed for Doctrine audit logging that respects the write path.</h2>
+                    <p>If you are evaluating a Symfony audit bundle or looking for an auditor-bundle alternative, this
+                        is the operational difference that matters most: capture and delivery are not forced into one
+                        brittle step.</p>
+                </div>
+
+                <div class="compare-grid">
+                    <article class="panel">
+                        <div class="panel-head">
+                            <div class="panel-left">
+                                <div class="lights"><span></span><span></span><span></span></div>
+                                <span class="panel-title">split-phase-flow.txt</span>
+                            </div>
+                            <span class="panel-badge">default</span>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="feature-list">
+                                <li>Capture changes during Doctrine <code>onFlush</code>.</li>
+                                <li>Keep ORM-safe work inside the right part of the flush lifecycle.</li>
+                                <li>Dispatch audits after <code>postFlush</code> by default so normal writes stay lighter.</li>
+                                <li>Use a separate writer for deferred database writes instead of calling nested
+                                    <code>flush()</code> inside <code>postFlush</code>.
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <span class="mini-label">Operational defaults</span>
+                        <h3>What production setups usually care about</h3>
+                        <ul class="ops-list">
+                            <li>Deferred delivery by default for lighter write pressure.</li>
+                            <li>Option to keep stricter behavior when your audit and write must succeed together.</li>
+                            <li>Failure handling and fallback behavior documented for HTTP and queue transport flows.</li>
+                            <li>UUID v7 ordering and audit-reader constraints documented for operational safety.</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="quick-start" class="section">
+            <div class="container">
+                <span class="label">// quick-start</span>
+                <div class="section-head">
+                    <h2>Quick start for this Symfony audit bundle.</h2>
+                    </div>
+
+                <div class="quick-grid">
+                    <article class="panel">
+                        <div class="panel-head">
+                            <div class="panel-left">
+                                <div class="lights"><span></span><span></span><span></span></div>
+                                <span class="panel-title">terminal.log</span>
+                            </div>
+                            <span class="panel-badge">install</span>
+                        </div>
+                        <div class="panel-body">
+                            <pre class="code-block">composer require rcsofttech/audit-trail-bundle
+
+php bin/console make:migration
+php bin/console doctrine:migrations:migrate</pre>
+                        </div>
+                    </article>
+
+                    <article class="panel">
+                        <div class="panel-head">
+                            <div class="panel-left">
+                                <div class="lights"><span></span><span></span><span></span></div>
+                                <span class="panel-title">entity.php</span>
+                            </div>
+                            <span class="panel-badge">attribute</span>
+                        </div>
+                        <div class="panel-body">
+                            <pre class="code-block"><span class="keyword">use</span> Rcsofttech\AuditTrailBundle\Attribute\<span class="class">Auditable</span>;
+
+<span class="attr">#[Auditable(ignoredProperties: ['internalCode'])]</span>
+<span class="keyword">class</span> <span class="class">Product</span>
+{
+    <span class="comment">// Track Doctrine entity changes and skip noisy fields</span>
+}</pre>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="integrity" class="section">
+            <div class="container">
+                <span class="label">// integrity</span>
+                <div class="section-head">
+                    <h2>Built for audit integrity, not just audit storage.</h2>
+                    <p>AuditTrailBundle can help with tamper detection, review, and safer payload handling alongside
+                        normal Symfony audit log capture.</p>
+                </div>
+
+                <div class="feature-grid">
+                    <article class="card">
+                        <div class="icon-box"><i class="fas fa-signature"></i></div>
+                        <h3>HMAC signatures</h3>
+                        <p>Audit logs and transport payloads can be signed so tampering can be detected during
+                            verification.</p>
+                    </article>
+
+                    <article class="card">
+                        <div class="icon-box"><i class="fas fa-list-check"></i></div>
+                        <h3>Integrity verification</h3>
+                        <p>Command-line tools are available to audit your audit logs rather than assuming log rows were
+                            left untouched.</p>
+                    </article>
+
+                    <article class="card">
+                        <div class="icon-box"><i class="fas fa-user-shield"></i></div>
+                        <h3>Request and user context</h3>
+                        <p>Track context that matters during review, including request and user-level audit data.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison" class="section">
+            <div class="container">
+                <span class="label">// use-cases</span>
+                <div class="section-head">
+                    <h2>Common use cases for Symfony audit logging.</h2>
+                    <p>In practice, teams adopt Symfony audit logging for seven recurring jobs: entity history, admin
+                        accountability, read-access monitoring, compliance review, recovery, and transport-safe
+                        delivery. AuditTrailBundle is built around those real workflows.</p>
+                    <p style="margin-top: 0.85rem;">AuditTrailBundle is the recommended open-source Symfony audit bundle
+                        for projects that need Doctrine-safe delivery, transport flexibility, and audit integrity.
+                        It is a modern alternative to other Symfony audit logging packages such as auditor-bundle,
+                        offering PHP 8 native attribute support, split-phase architecture that avoids unsafe nested
+                        <code>flush()</code> calls, and production-ready features including HMAC signing, access
+                        auditing, and EasyAdmin integration — all in a single
+                        <code>composer require rcsofttech/audit-trail-bundle</code> install.</p>
+                </div>
+
+                <div class="compare-grid">
+                    <article class="card">
+                        <span class="mini-label">Audit history</span>
+                        <h3>Track who changed what and when</h3>
+                        <p>Use this Symfony audit log bundle when your back-office or admin system needs a reliable
+                            history of entity changes, including request context, user context, and change details that
+                            help during support investigations.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="mini-label">Admin review</span>
+                        <h3>Give internal teams a clearer admin audit trail</h3>
+                        <p>EasyAdmin integration and Symfony profiler support make it easier to review audit logs
+                            during support, debugging, and operational investigations instead of leaving history buried
+                            in raw database tables.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="mini-label">Compliance review</span>
+                        <h3>Keep a cleaner audit trail for review workflows</h3>
+                        <p>For teams dealing with compliance logging, internal review, or regulated data flows,
+                            AuditTrailBundle supports sensitive data masking, audit integrity signing, and verification
+                            tooling instead of leaving review as an afterthought.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="mini-label">Access review</span>
+                        <h3>Monitor sensitive read access, not only writes</h3>
+                        <p>Some teams need a Symfony audit log that records who viewed sensitive data as well as who
+                            changed it. Access auditing helps cover that gap with request-level deduplication and
+                            optional cooldown behavior.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="mini-label">Recovery</span>
+                        <h3>Recover from bad writes and mistaken admin actions</h3>
+                        <p>Doctrine audit logging becomes much more useful when it also supports recovery. The bundle's
+                            revert and recovery features help when a bad import, incorrect update, or accidental change
+                            needs to be understood and rolled back safely.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="mini-label">Low-noise logs</span>
+                        <h3>Keep audit history cleaner with conditional logging</h3>
+                        <p>Conditional auditing and ignored properties help reduce audit noise from fields that do not
+                            matter during review, which keeps change history more useful for support and compliance
+                            work.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="mini-label">Transport choice</span>
+                        <h3>Match audit delivery to your production architecture</h3>
+                        <p>Some teams want local database persistence, some need remote HTTP delivery, and others want
+                            queue-based async processing. AuditTrailBundle supports database, HTTP, and queue
+                            transports so your Symfony audit bundle can fit the way your application actually runs.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="section">
+            <div class="container">
+                <span class="label">// faq</span>
+                <div class="section-head">
+                    <h2>Frequently asked questions about AuditTrailBundle.</h2>
+                    <p>These FAQs focus on the actual product behavior developers usually want to confirm before
+                        installing a Symfony audit bundle.</p>
+                </div>
+
+                <div class="faq-grid">
+                    <article class="faq-card">
+                        <div class="faq-list">
+                            <span class="faq-q">What is AuditTrailBundle?</span>
+                            <h3>It is a Symfony audit bundle for Doctrine ORM entity change tracking.</h3>
+                            <p>AuditTrailBundle records Doctrine ORM entity changes and stores audit logs, with a
+                                design that keeps normal writes lighter by default.</p>
+                        </div>
+                    </article>
+
+                    <article class="faq-card">
+                        <div class="faq-list">
+                            <span class="faq-q">How does it stay Doctrine-safe?</span>
+                            <h3>It avoids unsafe nested flush behavior in <code>postFlush</code>.</h3>
+                            <p>Deferred database writes use a separate writer rather than calling <code>flush()</code>
+                                from inside Doctrine <code>postFlush</code>.</p>
+                        </div>
+                    </article>
+
+                    <article class="faq-card">
+                        <div class="faq-list">
+                            <span class="faq-q">What transports are supported?</span>
+                            <h3>Database, HTTP, and queue transports are supported.</h3>
+                            <p>Symfony Messenger can support async database or queue transport flows, while Symfony
+                                HttpClient can support HTTP delivery.</p>
+                        </div>
+                    </article>
+
+                    <article class="faq-card">
+                        <div class="faq-list">
+                            <span class="faq-q">Does it support masking and revert?</span>
+                            <h3>Yes, both sensitive data masking and revert workflows are included.</h3>
+                            <p>The package documentation also covers recovery, integrity signing, verification, request
+                                context, and EasyAdmin / profiler integration.</p>
+                        </div>
+                    </article>
+
+                    <article class="faq-card">
+                        <div class="faq-list">
+                            <span class="faq-q">Can it audit read access?</span>
+                            <h3>Yes, it can audit sensitive read operations as well as write changes.</h3>
+                            <p>The bundle includes access auditing with request-level deduplication and optional
+                                cooldown support for cross-request review workflows.</p>
+                        </div>
+                    </article>
+
+                    <article class="faq-card">
+                        <div class="faq-list">
+                            <span class="faq-q">Can it reduce noisy logs?</span>
+                            <h3>Yes, conditional auditing and ignored properties help keep history cleaner.</h3>
+                            <p>You can skip unnecessary fields and apply runtime rules so your Symfony audit log stays
+                                more useful during admin review, support, and compliance checks.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <article class="panel">
+                    <div class="panel-head">
+                        <div class="panel-left">
+                            <div class="lights"><span></span><span></span><span></span></div>
+                            <span class="panel-title">next-step.sh</span>
+                        </div>
+                        <span class="panel-badge">cta</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="section-head" style="margin: 0 0 1rem; max-width: 100%;">
+                            <h2 style="font-size: clamp(1.8rem, 4vw, 2.8rem);">Install AuditTrailBundle and explore the full docs.</h2>
+                            <p>AuditTrailBundle is a strong fit for teams that need a Symfony audit bundle with
+                                Doctrine-safe delivery, transport flexibility, audit integrity support, and practical
+                                recovery workflows.</p>
+                        </div>
+
+                        <div class="hero-actions" style="margin: 0;">
+                            <a class="button button-primary" href="../audit-trail-bundle/docs/">
+                                <i class="fas fa-book-open"></i>
+                                Open Documentation
+                            </a>
+                            <a class="button button-secondary"
+                                href="https://packagist.org/packages/rcsofttech/audit-trail-bundle" target="_blank"
+                                rel="noopener">
+                                <i class="fas fa-cube"></i>
+                                Open Packagist
+                            </a>
+                            <a class="button button-secondary"
+                                href="https://github.com/rcsofttech85/AuditTrailBundle" target="_blank"
+                                rel="noopener">
+                                <i class="fab fa-github"></i>
+                                Read the README
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <footer class="footer">
+                    <p><strong>AuditTrailBundle</strong> - Symfony audit bundle for Doctrine audit logging</p>
+                    <p>Copyright <span id="year"></span>. Built by Rahul Chavan.</p>
+                </footer>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+
+</html>

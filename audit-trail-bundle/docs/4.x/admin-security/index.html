@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyAdmin & Security | AuditTrailBundle 4.x Documentation</title>
+    <meta name="description"
+        content="Set up AuditTrailBundle EasyAdmin integration, sensitive data masking, integrity signing, and verification commands.">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="theme-color" content="#f59e0b">
+    <link rel="canonical" href="https://rcsofttech85.github.io/audit-trail-bundle/docs/4.x/admin-security/">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/docs.css">
+</head>
+
+<body data-doc-page="admin-security">
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="../../../../symfony-audit-bundle/">
+                <span class="brand-mark">AT</span>
+                <span class="brand-copy">
+                    <strong>AuditTrailBundle</strong>
+                    <span>4.x documentation</span>
+                </span>
+            </a>
+
+            <div class="top-links" aria-label="Project links">
+                <a href="../../../../symfony-audit-bundle/"><i class="fas fa-arrow-left"></i> Product</a>
+                <a href="https://github.com/rcsofttech85/AuditTrailBundle" target="_blank" rel="noopener">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://packagist.org/packages/rcsofttech/audit-trail-bundle" target="_blank" rel="noopener">
+                    <i class="fas fa-cube"></i> Packagist
+                </a>
+            </div>
+
+            <div class="header-tools">
+                <div class="search-box">
+                    <input class="search-input" type="search" placeholder="Search docs" data-doc-search
+                        aria-label="Search documentation">
+                    <div class="search-results" data-search-results></div>
+                </div>
+                <select class="version-select" data-version-select aria-label="Select documentation version">
+                    <option value="../../current/">current</option>
+                    <option value="../" selected>4.x</option>
+                </select>
+                <button class="mobile-nav-toggle" type="button" data-mobile-nav-toggle aria-label="Toggle docs navigation"
+                    aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="container docs-layout">
+                        <aside class="docs-sidebar" data-docs-nav>
+                <nav class="docs-nav">
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Start</span>
+                        <a href="/audit-trail-bundle/docs/4.x/">Overview</a>
+                        <a href="/audit-trail-bundle/docs/4.x/quick-start/">Quick Start</a>
+                        <a href="/audit-trail-bundle/docs/4.x/configuration/">Configuration</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Transports</span>
+                        <a href="/audit-trail-bundle/docs/4.x/transports/">Transports</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Usage</span>
+                        <a href="/audit-trail-bundle/docs/4.x/usage/">Usage</a>
+                        <a href="/audit-trail-bundle/docs/4.x/admin-security/">Admin & Security</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Operations</span>
+                        <a href="/audit-trail-bundle/docs/4.x/operations/">Operations</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Reference</span>
+                        <a href="/audit-trail-bundle/docs/4.x/upgrade-architecture/">Upgrade & Architecture</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Links</span>
+                        <a href="/">Home Portfolio</a>
+                        <a href="/symfony-audit-bundle/">Product Home</a>
+                    </div>
+                </nav>
+            </aside>
+
+            <article class="doc-content">
+                <section class="doc-hero">
+                    <span class="eyebrow">Admin and integrity</span>
+                    <h1>Review audit logs without losing integrity.</h1>
+                    <p class="lead">Use EasyAdmin for operational review, Symfony profiler for development visibility,
+                        and integrity tools to detect tampering or protect transport payloads.</p>
+                    <div class="doc-meta">
+                        <span class="badge is-current">4.x</span>
+                        <span class="badge">EasyAdmin</span>
+                        <span class="badge">HMAC signing</span>
+                        <span class="badge">Sensitive masking</span>
+                    </div>
+                </section>
+
+                <section class="doc-section" id="easyadmin-integration">
+                    <h2>EasyAdmin Integration</h2>
+                    <p>Install EasyAdmin, then add the bundle's audit log CRUD controller to your dashboard menu.</p>
+
+                    <pre><code class="language-bash">composer require easycorp/easyadmin-bundle</code></pre>
+
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Controller\Admin;
+
+use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use Rcsofttech\AuditTrailBundle\Controller\Admin\AuditLogCrudController;
+
+final class DashboardController extends AbstractDashboardController
+{
+    public function configureMenuItems(): iterable
+    {
+        yield MenuItem::linkTo(AuditLogCrudController::class, 'Audit Logs', 'fas fa-history');
+    }
+}</code></pre>
+
+                    <pre><code class="language-yaml">audit_trail:
+    easyadmin:
+        permission: 'ROLE_ADMIN'
+        export_limit: 50000</code></pre>
+
+                    <p>Install bundle assets so custom diff styling, action badges, and revert modals load correctly.
+                    </p>
+                    <pre><code class="language-bash">php bin/console assets:install public</code></pre>
+                    <p>EasyAdmin export applies the active admin filters first, then enforces
+                        <code>easyadmin.export_limit</code>. Transaction drill-down pagination accepts only one cursor at
+                        a time: <code>afterId</code> or <code>beforeId</code>, not both.</p>
+                </section>
+
+                <section class="doc-section" id="profiler">
+                    <h2>Symfony Profiler</h2>
+                    <p>When <code>WebProfilerBundle</code> is installed, the profiler integration activates
+                        automatically in development and test environments.</p>
+
+                    <ul>
+                        <li>Toolbar badge with audit count for the current request.</li>
+                        <li>Profiler panel with action, entity, fields, user, transaction hash, and timestamp.</li>
+                        <li>Summary tab with create, update, delete, and other action totals.</li>
+                    </ul>
+                </section>
+
+                <section class="doc-section" id="security-integrity">
+                    <h2>Security & Integrity</h2>
+                    <p>Enable signing when audit logs must be tamper-evident. Configure a stable secret and keep it out
+                        of the repository.</p>
+
+                    <pre><code class="language-yaml">audit_trail:
+    integrity:
+        enabled: true
+        secret: '%env(string:AUDIT_INTEGRITY_SECRET)%'
+        algorithm: 'sha256'</code></pre>
+
+                    <pre><code class="language-bash"># Set this in your deployment secret store.
+# Use a stable, high-entropy value and keep it out of the repository.
+AUDIT_INTEGRITY_SECRET='replace-with-at-least-32-random-characters'</code></pre>
+
+                    <h3 id="verify-integrity">Verify Stored Logs</h3>
+                    <pre><code class="language-bash">php bin/console audit:verify-integrity</code></pre>
+
+                    <p>Verification checks stored signatures and reports records that no longer match their signed
+                        representation. Treat a mismatch as a serious security incident and investigate database access.
+                    </p>
+
+                    <p>Stored signatures cover the entity identity and action, old and new values,
+                        <code>changed_fields</code>, user and request metadata, transaction hash, persisted context,
+                        and creation timestamp. Persisted context larger than 65,536 bytes is truncated to a safe marker
+                        payload before storage and signing.</p>
+                </section>
+
+                <section class="doc-section" id="masking">
+                    <h2>Sensitive Data Masking</h2>
+                    <p>Mask sensitive values so audit payloads do not store secrets in clear text.</p>
+
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+use Doctrine\ORM\Mapping as ORM;
+use Rcsofttech\AuditTrailBundle\Attribute\Auditable;
+use Rcsofttech\AuditTrailBundle\Attribute\Sensitive;
+
+#[ORM\Entity]
+#[Auditable]
+class CustomerProfile
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    public private(set) ?int $id = null;
+
+    public function __construct(
+        #[ORM\Column(length: 255)]
+        #[\SensitiveParameter]
+        private string $passwordHash,
+
+        #[ORM\Column(length: 32)]
+        #[Sensitive(mask: '****')]
+        private string $ssn,
+    ) {
+    }
+}</code></pre>
+                </section>
+
+                <section class="doc-section" id="transport-signing">
+                    <h2>Transport Payload Signing</h2>
+                    <p>When integrity is enabled, HTTP payloads carry an <code>X-Signature</code> header and queue
+                        payloads carry signature metadata through a Messenger stamp.</p>
+
+                    <pre><code class="language-http">POST /api/logs HTTP/1.1
+X-Signature: a1b2c3d4...
+Content-Type: application/json
+
+{ "entity_class": "App\\Entity\\User", "action": "update" }</code></pre>
+
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+use Rcsofttech\AuditTrailBundle\Message\Stamp\SignatureStamp;
+
+$signature = $envelope-&gt;last(SignatureStamp::class)?-&gt;signature;</code></pre>
+                    <p>The entity-level <code>signature</code> field protects the stored audit record for long-term
+                        integrity. Transport signatures protect the outbound HTTP or Messenger payload in transit and
+                        are generated just before delivery.</p>
+                </section>
+
+
+            </article>
+
+            <aside class="docs-toc" data-page-toc></aside>
+        </div>
+    </main>
+
+    <footer class="docs-footer">
+        <div class="container footer-inner">
+            <p><strong>AuditTrailBundle</strong> documentation for 4.x</p>
+            <p>Copyright <span data-year></span>. Built by Rahul Chavan.</p>
+        </div>
+    </footer>
+
+    <script src="../../assets/docs.js"></script>
+</body>
+
+</html>

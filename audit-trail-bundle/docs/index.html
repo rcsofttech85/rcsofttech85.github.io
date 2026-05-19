@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuditTrailBundle Documentation | Symfony Audit Bundle Docs</title>
+    <meta name="description"
+        content="Documentation entry point for AuditTrailBundle 4.x, a Symfony audit bundle for Doctrine entity history, transports, integrity, EasyAdmin, revert, and recovery.">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="theme-color" content="#f59e0b">
+    <link rel="canonical" href="https://rcsofttech85.github.io/audit-trail-bundle/docs/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://rcsofttech85.github.io/audit-trail-bundle/docs/">
+    <meta property="og:title" content="AuditTrailBundle Documentation">
+    <meta property="og:description"
+        content="Versioned public documentation for installing and operating AuditTrailBundle in Symfony applications.">
+    <meta property="og:image" content="https://rcsofttech85.github.io/symfony.svg">
+    <meta property="og:site_name" content="AuditTrailBundle Documentation">
+    <meta property="og:locale" content="en_US">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://rcsofttech85.github.io/audit-trail-bundle/docs/">
+    <meta name="twitter:title" content="AuditTrailBundle Documentation | Symfony Audit Bundle Docs">
+    <meta name="twitter:description"
+        content="Install, configure, and operate AuditTrailBundle, a Symfony audit bundle for Doctrine entity history and audit logging.">
+    <meta name="twitter:image" content="https://rcsofttech85.github.io/symfony.svg">
+    <meta name="twitter:creator" content="@rcsofttech85">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "@id": "https://rcsofttech85.github.io/audit-trail-bundle/docs/#webpage",
+        "url": "https://rcsofttech85.github.io/audit-trail-bundle/docs/",
+        "name": "AuditTrailBundle Documentation",
+        "description": "Documentation for AuditTrailBundle 4.x, a Symfony audit bundle for Doctrine audit logging, entity history, transports, integrity, EasyAdmin, revert, and recovery.",
+        "inLanguage": "en",
+        "dateModified": "2026-06-05",
+        "isPartOf": {
+            "@type": "WebSite",
+            "name": "Rahul Chavan Portfolio",
+            "url": "https://rcsofttech85.github.io/"
+        },
+        "about": {
+            "@id": "https://rcsofttech85.github.io/symfony-audit-bundle/#software"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Rahul Chavan",
+            "url": "https://rcsofttech85.github.io/"
+        }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Portfolio",
+                "item": "https://rcsofttech85.github.io/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "AuditTrailBundle",
+                "item": "https://rcsofttech85.github.io/symfony-audit-bundle/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Documentation",
+                "item": "https://rcsofttech85.github.io/audit-trail-bundle/docs/"
+            }
+        ]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/docs.css">
+</head>
+
+<body data-doc-page="index">
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="../../symfony-audit-bundle/">
+                <span class="brand-mark">AT</span>
+                <span class="brand-copy">
+                    <strong>AuditTrailBundle</strong>
+                    <span>Documentation</span>
+                </span>
+            </a>
+
+            <div class="top-links" aria-label="Project links">
+                <a href="../../symfony-audit-bundle/"><i class="fas fa-arrow-left"></i> Product</a>
+                <a href="https://github.com/rcsofttech85/AuditTrailBundle" target="_blank" rel="noopener">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://packagist.org/packages/rcsofttech/audit-trail-bundle" target="_blank" rel="noopener">
+                    <i class="fas fa-cube"></i> Packagist
+                </a>
+            </div>
+
+            <div class="header-tools">
+                <div class="search-box">
+                    <input class="search-input" type="search" placeholder="Search docs" data-doc-search
+                        aria-label="Search documentation">
+                    <div class="search-results" data-search-results></div>
+                </div>
+                <select class="version-select" data-version-select aria-label="Select documentation version">
+                    <option value="current/">current</option>
+                    <option value="4.x/" selected>4.x</option>
+                </select>
+                <button class="mobile-nav-toggle" type="button" data-mobile-nav-toggle aria-label="Toggle docs navigation"
+                    aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="container docs-layout">
+                        <aside class="docs-sidebar" data-docs-nav>
+                <nav class="docs-nav">
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Start</span>
+                        <a href="/audit-trail-bundle/docs/4.x/">Overview</a>
+                        <a href="/audit-trail-bundle/docs/4.x/quick-start/">Quick Start</a>
+                        <a href="/audit-trail-bundle/docs/4.x/configuration/">Configuration</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Transports</span>
+                        <a href="/audit-trail-bundle/docs/4.x/transports/">Transports</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Usage</span>
+                        <a href="/audit-trail-bundle/docs/4.x/usage/">Usage</a>
+                        <a href="/audit-trail-bundle/docs/4.x/admin-security/">Admin & Security</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Operations</span>
+                        <a href="/audit-trail-bundle/docs/4.x/operations/">Operations</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Reference</span>
+                        <a href="/audit-trail-bundle/docs/4.x/upgrade-architecture/">Upgrade & Architecture</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Links</span>
+                        <a href="/">Home Portfolio</a>
+                        <a href="/symfony-audit-bundle/">Product Home</a>
+                    </div>
+                </nav>
+            </aside>
+
+            <article class="doc-content">
+                <section class="doc-hero">
+                    <span class="eyebrow">AuditTrailBundle docs</span>
+                    <h1>Docs for the Symfony audit bundle.</h1>
+                    <p class="lead">Use these pages as the documentation entry point for AuditTrailBundle 4.x. The README
+                        stays the quick entry point; these pages expand quick start, configuration, transports,
+                        integrity, admin UI, querying, recovery, and architecture.</p>
+
+                    <div class="doc-meta">
+                        <span class="badge is-current"><i class="fas fa-code-branch"></i> current: 4.x</span>
+                        <span class="badge"><i class="fas fa-tag"></i> package: rcsofttech/audit-trail-bundle</span>
+                        <span class="badge"><i class="fas fa-clock"></i> patch docs are not split</span>
+                    </div>
+
+                    <div class="action-row">
+                        <a class="button button-primary" href="4.x/">
+                            <i class="fas fa-book-open"></i>
+                            Open 4.x Docs
+                        </a>
+
+                    </div>
+                </section>
+
+                <section class="doc-section" id="start-here">
+                    <h2>Start Here</h2>
+                    <div class="card-grid">
+                        <a class="doc-card" href="4.x/quick-start/">
+                            <h3>Quick Start</h3>
+                            <p>Install the bundle, run the migration, add <code>#[Auditable]</code>, and review your first audit rows.</p>
+                        </a>
+                        <a class="doc-card" href="4.x/configuration/">
+                            <h3>Configuration</h3>
+                            <p>Configure database, queue, HTTP, integrity, EasyAdmin, and operational defaults.</p>
+                        </a>
+                        <a class="doc-card" href="4.x/transports/">
+                            <h3>Transports</h3>
+                            <p>Choose database, async database, queue, HTTP, or chain-style delivery.</p>
+                        </a>
+                        <a class="doc-card" href="4.x/usage/#audit-reader-api">
+                            <h3>AuditReader API</h3>
+                            <p>Query entity history, changed fields, diffs, transactions, and cursor pages.</p>
+                        </a>
+                    </div>
+                </section>
+
+
+
+                <section class="source-panel" id="project-links">
+                    <h2>Project Links</h2>
+                    <p>Canonical package metadata, source, issue tracking, and release history remain in the package
+                        repository and Packagist.</p>
+                    <div class="source-links">
+                        <a class="source-pill" href="https://github.com/rcsofttech85/AuditTrailBundle" target="_blank"
+                            rel="noopener">GitHub repository</a>
+                        <a class="source-pill" href="https://packagist.org/packages/rcsofttech/audit-trail-bundle"
+                            target="_blank" rel="noopener">Packagist package</a>
+                        <a class="source-pill" href="https://github.com/rcsofttech85/AuditTrailBundle/issues"
+                            target="_blank" rel="noopener">Issues</a>
+                        <a class="source-pill" href="https://github.com/rcsofttech85/AuditTrailBundle/blob/main/CHANGELOG.md"
+                            target="_blank" rel="noopener">Changelog</a>
+                    </div>
+                </section>
+            </article>
+
+            <aside class="docs-toc" data-page-toc></aside>
+        </div>
+    </main>
+
+    <footer class="docs-footer">
+        <div class="container footer-inner">
+            <p><strong>AuditTrailBundle</strong> documentation for 4.x</p>
+            <p>Copyright <span data-year></span>. Built by Rahul Chavan.</p>
+        </div>
+    </footer>
+
+    <script src="assets/docs.js"></script>
+</body>
+
+</html>

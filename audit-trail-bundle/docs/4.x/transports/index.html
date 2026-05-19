@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transports | AuditTrailBundle 4.x Documentation</title>
+    <meta name="description"
+        content="Configure AuditTrailBundle database, async database, queue, HTTP, and chain-style audit transports.">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="theme-color" content="#f59e0b">
+    <link rel="canonical" href="https://rcsofttech85.github.io/audit-trail-bundle/docs/4.x/transports/">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/docs.css">
+</head>
+
+<body data-doc-page="transports">
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="../../../../symfony-audit-bundle/">
+                <span class="brand-mark">AT</span>
+                <span class="brand-copy">
+                    <strong>AuditTrailBundle</strong>
+                    <span>4.x documentation</span>
+                </span>
+            </a>
+
+            <div class="top-links" aria-label="Project links">
+                <a href="../../../../symfony-audit-bundle/"><i class="fas fa-arrow-left"></i> Product</a>
+                <a href="https://github.com/rcsofttech85/AuditTrailBundle" target="_blank" rel="noopener">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://packagist.org/packages/rcsofttech/audit-trail-bundle" target="_blank" rel="noopener">
+                    <i class="fas fa-cube"></i> Packagist
+                </a>
+            </div>
+
+            <div class="header-tools">
+                <div class="search-box">
+                    <input class="search-input" type="search" placeholder="Search docs" data-doc-search
+                        aria-label="Search documentation">
+                    <div class="search-results" data-search-results></div>
+                </div>
+                <select class="version-select" data-version-select aria-label="Select documentation version">
+                    <option value="../../current/">current</option>
+                    <option value="../" selected>4.x</option>
+                </select>
+                <button class="mobile-nav-toggle" type="button" data-mobile-nav-toggle aria-label="Toggle docs navigation"
+                    aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="container docs-layout">
+                        <aside class="docs-sidebar" data-docs-nav>
+                <nav class="docs-nav">
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Start</span>
+                        <a href="/audit-trail-bundle/docs/4.x/">Overview</a>
+                        <a href="/audit-trail-bundle/docs/4.x/quick-start/">Quick Start</a>
+                        <a href="/audit-trail-bundle/docs/4.x/configuration/">Configuration</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Transports</span>
+                        <a href="/audit-trail-bundle/docs/4.x/transports/">Transports</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Usage</span>
+                        <a href="/audit-trail-bundle/docs/4.x/usage/">Usage</a>
+                        <a href="/audit-trail-bundle/docs/4.x/admin-security/">Admin & Security</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Operations</span>
+                        <a href="/audit-trail-bundle/docs/4.x/operations/">Operations</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Reference</span>
+                        <a href="/audit-trail-bundle/docs/4.x/upgrade-architecture/">Upgrade & Architecture</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Links</span>
+                        <a href="/">Home Portfolio</a>
+                        <a href="/symfony-audit-bundle/">Product Home</a>
+                    </div>
+                </nav>
+            </aside>
+
+            <article class="doc-content">
+                <section class="doc-hero">
+                    <span class="eyebrow">Transports</span>
+                    <h1>Choose how audits leave the app.</h1>
+                    <p class="lead">AuditTrailBundle can store audits in the local database, write database rows through
+                        Messenger, publish audit messages to a queue, or send JSON to an HTTP endpoint.</p>
+                    <div class="doc-meta">
+                        <span class="badge is-current">4.x</span>
+                        <span class="badge">Database</span>
+                        <span class="badge">Messenger</span>
+                        <span class="badge">HTTP</span>
+                    </div>
+                </section>
+
+                <section class="doc-section" id="install-matrix">
+                    <h2>Install Matrix</h2>
+                    <p>Messenger is used for two different jobs: async database persistence writes local audit rows in a
+                        worker, while queue transport publishes audit messages to an external consumer. They use
+                        different message types and transport names, so both can be enabled in the same application.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Transport</th>
+                                <th>Extra Package</th>
+                                <th>Extra Symfony Config</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Database</td>
+                                <td>None</td>
+                                <td>None</td>
+                            </tr>
+                            <tr>
+                                <td>Async database</td>
+                                <td><code>symfony/messenger</code></td>
+                                <td>Messenger transport named <code>audit_trail_database</code></td>
+                            </tr>
+                            <tr>
+                                <td>Queue</td>
+                                <td><code>symfony/messenger</code></td>
+                                <td>Messenger transport named <code>audit_trail</code></td>
+                            </tr>
+                            <tr>
+                                <td>HTTP</td>
+                                <td><code>symfony/http-client</code></td>
+                                <td>Endpoint, headers, and timeout</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="doc-section" id="database">
+                    <h2>Database</h2>
+                    <p>The database transport stores audit rows locally. During <code>onFlush</code>, ORM-safe rows join
+                        the current UnitOfWork. During deferred phases, the bundle writes rows without calling a nested
+                        Doctrine <code>flush()</code>.</p>
+
+                    <pre><code class="language-yaml">audit_trail:
+    transports:
+        database:
+            enabled: true
+            async: false</code></pre>
+
+                    <p>Choose synchronous database delivery when the application and audit history should stay close
+                        together and you do not want another runtime dependency.</p>
+                </section>
+
+                <section class="doc-section" id="async-database">
+                    <h2>Async Database</h2>
+                    <p>Async database mode sends audit rows to a Messenger worker that persists them later. This is
+                        useful when write latency matters and local database persistence is still the destination.</p>
+
+                    <pre><code class="language-yaml"># config/packages/audit_trail.yaml
+audit_trail:
+    transports:
+        database:
+            enabled: true
+            async: true</code></pre>
+
+                    <pre><code class="language-yaml"># config/packages/messenger.yaml
+framework:
+    messenger:
+        transports:
+            audit_trail_database: '%env(MESSENGER_TRANSPORT_DSN)%'</code></pre>
+
+                    <p>Run a Messenger worker for the <code>audit_trail_database</code> transport in production.</p>
+                    <pre><code class="language-bash">php bin/console messenger:consume audit_trail_database -vv</code></pre>
+
+                    <ul>
+                        <li>Async database delivery uses an internal delivery identifier so Messenger retries are
+                            idempotent instead of creating duplicate audit rows.</li>
+                        <li>The worker preserves the original audit-log UUID so keyset pagination and latest-first
+                            reads stay aligned with audit creation order.</li>
+                        <li>If integrity signing is enabled, the worker verifies the carried entity signature before
+                            inserting the row.</li>
+                    </ul>
+                </section>
+
+                <section class="doc-section" id="queue">
+                    <h2>Queue</h2>
+                    <p>The queue transport publishes <code>AuditLogMessage</code> through Symfony Messenger for an
+                        external consumer or worker pipeline. The message class is already marked with
+                        <code>#[AsMessage(transport: 'audit_trail')]</code>; define the matching Messenger transport.
+                    </p>
+
+                    <pre><code class="language-yaml"># config/packages/audit_trail.yaml
+audit_trail:
+    transports:
+        queue:
+            enabled: true
+            bus: 'messenger.bus.default'
+            # Optional: adds an ApiKeyStamp for downstream consumers.
+            api_key: '%env(AUDIT_QUEUE_API_KEY)%'</code></pre>
+
+                    <pre><code class="language-yaml"># config/packages/messenger.yaml
+framework:
+    messenger:
+        transports:
+            audit_trail: '%env(MESSENGER_TRANSPORT_DSN)%'</code></pre>
+
+                    <h3 id="queue-stamps">Messenger Stamps</h3>
+                    <p>The bundle adds <code>ApiKeyStamp</code> when <code>api_key</code> is configured and
+                        <code>SignatureStamp</code> when integrity signing is enabled. Use
+                        <code>AuditMessageStampEvent</code> for application-specific Messenger stamps.</p>
+
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\EventSubscriber;
+
+use Rcsofttech\AuditTrailBundle\Event\AuditMessageStampEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
+
+final class AuditMessengerSubscriber implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents(): array
+    {
+        return [AuditMessageStampEvent::class =&gt; 'onAuditMessageStamp'];
+    }
+
+    public function onAuditMessageStamp(AuditMessageStampEvent $event): void
+    {
+        $event-&gt;addStamp(new DelayStamp(5000));
+    }
+}</code></pre>
+                </section>
+
+                <section class="doc-section" id="http">
+                    <h2>HTTP</h2>
+                    <p>The HTTP transport sends audit logs to an external API endpoint, logging service, SIEM, ELK, or
+                        Splunk-style pipeline. It supports deferred phases such as <code>postFlush</code> and
+                        <code>postLoad</code>.</p>
+
+                    <pre><code class="language-yaml">audit_trail:
+    transports:
+        http:
+            enabled: true
+            endpoint: 'https://audit-service.internal/api/logs'
+            headers:
+                Authorization: 'Bearer %env(AUDIT_HTTP_TOKEN)%'
+            timeout: 10</code></pre>
+
+                    <p>When integrity is enabled, the bundle adds an <code>X-Signature</code> header containing the HMAC
+                        signature of the JSON body. Plain HTTP endpoints are accepted only in the <code>dev</code>
+                        environment; production endpoints must use HTTPS.</p>
+                </section>
+
+                <section class="doc-section" id="chain">
+                    <h2>Chain</h2>
+                    <p>The package contains chain and null transport helpers internally. For normal application config,
+                        think of chain-style delivery as enabling the destinations you want and setting failure behavior
+                        deliberately.</p>
+
+                    <pre><code class="language-yaml">audit_trail:
+    fallback_to_database: true
+    fail_on_transport_error: false
+    transports:
+        database:
+            enabled: true
+            async: false
+        http:
+            enabled: true
+            endpoint: 'https://audit-service.internal/api/logs'
+            timeout: 5</code></pre>
+
+                    <p>With this shape, the external transport can be attempted while database-backed fallback remains
+                        available. Use stricter settings when a failed audit delivery should fail the application write.
+                    </p>
+
+                    <ul>
+                        <li>When multiple transports are enabled, the bundle runs them in fixed order:
+                            <code>database</code>, then <code>http</code>, then <code>queue</code>.</li>
+                        <li><code>ChainAuditTransport</code> is fail-fast: when one child throws, later child transports
+                            do not run.</li>
+                        <li>Fail-fast does not roll back side effects already produced by earlier transports.</li>
+                        <li>Database-backed delivery uses internal delivery IDs for idempotency across fallback and
+                            retry paths.</li>
+                    </ul>
+                </section>
+
+                <section class="doc-section" id="custom-transport">
+                    <h2>Custom Transport Contract</h2>
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Audit;
+
+use Rcsofttech\AuditTrailBundle\Contract\AuditTransportInterface;
+use Rcsofttech\AuditTrailBundle\Transport\AuditDeliveryResult;
+use Rcsofttech\AuditTrailBundle\Transport\AuditTransportContext;
+
+final class AppAuditTransport implements AuditTransportInterface
+{
+    public function send(AuditTransportContext $context): AuditDeliveryResult
+    {
+        // Send $context-&gt;audit to your platform.
+        return AuditDeliveryResult::delivered();
+    }
+
+                    public function supports(AuditTransportContext $context): bool
+    {
+        return $context-&gt;phase-&gt;isAsyncDispatchPhase()
+            && $context-&gt;audit-&gt;hasResolvedEntityId();
+    }
+}</code></pre>
+                    <p>The transport context exposes the current audit phase, entity manager, audit log, optional
+                        UnitOfWork, and source entity. Treat it as read-only. Return
+                        <code>AuditDeliveryResult::delivered()</code> on success, or
+                        <code>AuditDeliveryResult::partiallyDelivered()</code> when a multi-step transport has already
+                        completed some child deliveries before failing.</p>
+                </section>
+
+
+            </article>
+
+            <aside class="docs-toc" data-page-toc></aside>
+        </div>
+    </main>
+
+    <footer class="docs-footer">
+        <div class="container footer-inner">
+            <p><strong>AuditTrailBundle</strong> documentation for 4.x</p>
+            <p>Copyright <span data-year></span>. Built by Rahul Chavan.</p>
+        </div>
+    </footer>
+
+    <script src="../../assets/docs.js"></script>
+</body>
+
+</html>

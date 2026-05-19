@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration | AuditTrailBundle 4.x Documentation</title>
+    <meta name="description"
+        content="Configure AuditTrailBundle 4.x transports, integrity signing, access auditing, EasyAdmin options, and transaction safety.">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="theme-color" content="#f59e0b">
+    <link rel="canonical" href="https://rcsofttech85.github.io/audit-trail-bundle/docs/4.x/configuration/">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/docs.css">
+</head>
+
+<body data-doc-page="configuration">
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="../../../../symfony-audit-bundle/">
+                <span class="brand-mark">AT</span>
+                <span class="brand-copy">
+                    <strong>AuditTrailBundle</strong>
+                    <span>4.x documentation</span>
+                </span>
+            </a>
+
+            <div class="top-links" aria-label="Project links">
+                <a href="../../../../symfony-audit-bundle/"><i class="fas fa-arrow-left"></i> Product</a>
+                <a href="https://github.com/rcsofttech85/AuditTrailBundle" target="_blank" rel="noopener">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://packagist.org/packages/rcsofttech/audit-trail-bundle" target="_blank" rel="noopener">
+                    <i class="fas fa-cube"></i> Packagist
+                </a>
+            </div>
+
+            <div class="header-tools">
+                <div class="search-box">
+                    <input class="search-input" type="search" placeholder="Search docs" data-doc-search
+                        aria-label="Search documentation">
+                    <div class="search-results" data-search-results></div>
+                </div>
+                <select class="version-select" data-version-select aria-label="Select documentation version">
+                    <option value="../../current/">current</option>
+                    <option value="../" selected>4.x</option>
+                </select>
+                <button class="mobile-nav-toggle" type="button" data-mobile-nav-toggle aria-label="Toggle docs navigation"
+                    aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="container docs-layout">
+                        <aside class="docs-sidebar" data-docs-nav>
+                <nav class="docs-nav">
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Start</span>
+                        <a href="/audit-trail-bundle/docs/4.x/">Overview</a>
+                        <a href="/audit-trail-bundle/docs/4.x/quick-start/">Quick Start</a>
+                        <a href="/audit-trail-bundle/docs/4.x/configuration/">Configuration</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Transports</span>
+                        <a href="/audit-trail-bundle/docs/4.x/transports/">Transports</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Usage</span>
+                        <a href="/audit-trail-bundle/docs/4.x/usage/">Usage</a>
+                        <a href="/audit-trail-bundle/docs/4.x/admin-security/">Admin & Security</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Operations</span>
+                        <a href="/audit-trail-bundle/docs/4.x/operations/">Operations</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Reference</span>
+                        <a href="/audit-trail-bundle/docs/4.x/upgrade-architecture/">Upgrade & Architecture</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Links</span>
+                        <a href="/">Home Portfolio</a>
+                        <a href="/symfony-audit-bundle/">Product Home</a>
+                    </div>
+                </nav>
+            </aside>
+
+            <article class="doc-content">
+                <section class="doc-hero">
+                    <span class="eyebrow">Configuration</span>
+                    <h1>Configure AuditTrailBundle</h1>
+                    <p class="lead">Create <code>config/packages/audit_trail.yaml</code> and configure only the features
+                        your application needs. The database transport is the default baseline.</p>
+                    <div class="doc-meta">
+                        <span class="badge is-current">4.x</span>
+                        <span class="badge">YAML examples</span>
+                        <span class="badge">Transport-aware defaults</span>
+                    </div>
+                </section>
+
+                <section class="doc-section" id="baseline">
+                    <h2>Baseline Config</h2>
+                    <pre><code class="language-yaml"># config/packages/audit_trail.yaml
+audit_trail:
+    enabled: true
+    table_prefix: ''
+    table_suffix: ''
+    timezone: 'UTC'
+    ignored_properties: ['updatedAt', 'updated_at']
+    ignored_entities: []
+    retention_days: 365
+    track_ip_address: true
+    track_user_agent: true
+    enable_hard_delete: true
+    enable_soft_delete: true
+    soft_delete_field: 'deletedAt'
+    cache_pool: null
+    audited_methods: ['GET']
+    collection_serialization_mode: 'lazy'
+    max_collection_items: 100</code></pre>
+
+                    <ul>
+                        <li><code>table_prefix</code> and <code>table_suffix</code> may contain only letters, numbers,
+                            and underscores, and cannot start with a digit.</li>
+                        <li><code>soft_delete_field</code> should be a nullable timestamp-like field, such as
+                            <code>deletedAt</code> or <code>archivedAt</code>.</li>
+                        <li>Use mapped entity classes in <code>ignored_entities</code>; the bundle resolves proxies and
+                            lazy subclasses back to the mapped class.</li>
+                        <li>Set <code>cache_pool</code> to a PSR-6 pool when access-audit cooldowns must survive beyond
+                            the current request.</li>
+                    </ul>
+
+                    <h3 id="collection-and-queue-limits">Collection And Queue Limits</h3>
+                    <pre><code class="language-yaml">audit_trail:
+    collection_serialization_mode: 'lazy' # lazy, ids_only, or eager
+    max_collection_items: 100
+    queue_limits:
+        scheduled_audits: 1000
+        pending_audit_plans: 1000
+        pending_deletions: 1000</code></pre>
+
+                    <p>Keep <code>collection_serialization_mode</code> on <code>lazy</code> unless your audit history
+                        must include relation item IDs. Use <code>ids_only</code> or <code>eager</code> deliberately on
+                        entities where the extra Doctrine work is acceptable.</p>
+
+                    <p>If a collection exceeds <code>max_collection_items</code>, the stored value is truncated to a
+                        marker payload with <code>_truncated</code>, <code>_total_count</code>, and
+                        <code>_sample</code> keys instead of writing an unbounded relation snapshot.</p>
+                </section>
+
+                <section class="doc-section" id="database-config">
+                    <h2>Database Transport</h2>
+                    <pre><code class="language-yaml">audit_trail:
+    transports:
+        database:
+            enabled: true
+            async: false</code></pre>
+                    <p>Use synchronous database transport when you want local persistence with no extra package. Use
+                        <code>async: true</code> only after installing and configuring Symfony Messenger.</p>
+                </section>
+
+                <section class="doc-section" id="queue-config">
+                    <h2>Queue Transport</h2>
+                    <pre><code class="language-yaml"># config/packages/audit_trail.yaml
+audit_trail:
+    transports:
+        queue:
+            enabled: true
+            bus: 'messenger.bus.default'
+            # Optional: adds an ApiKeyStamp to queued audit messages.
+            api_key: '%env(AUDIT_QUEUE_API_KEY)%'</code></pre>
+
+                    <pre><code class="language-yaml"># config/packages/messenger.yaml
+framework:
+    messenger:
+        transports:
+            audit_trail: '%env(MESSENGER_TRANSPORT_DSN)%'</code></pre>
+                </section>
+
+                <section class="doc-section" id="http-config">
+                    <h2>HTTP Transport</h2>
+                    <pre><code class="language-yaml">audit_trail:
+    transports:
+        http:
+            enabled: true
+            endpoint: 'https://audit-service.internal/api/logs'
+            headers:
+                Authorization: 'Bearer %env(AUDIT_HTTP_TOKEN)%'
+            timeout: 10</code></pre>
+                    <p>The HTTP endpoint must start with <code>http://</code> or <code>https://</code>. Plain HTTP is
+                        allowed only in the <code>dev</code> environment; use HTTPS in production. Install
+                        <code>symfony/http-client</code> before enabling this transport.</p>
+                </section>
+
+                <section class="doc-section" id="integrity-config">
+                    <h2>Integrity Signing</h2>
+                    <pre><code class="language-yaml">audit_trail:
+    integrity:
+        enabled: true
+        secret: '%env(string:AUDIT_INTEGRITY_SECRET)%'
+        algorithm: 'sha256'</code></pre>
+                    <p>When integrity is enabled, stored audit logs can be verified later and HTTP or queue payloads are
+                        signed for transport authenticity. The bundle expects the secret to be configured as a Symfony
+                        env placeholder.</p>
+                </section>
+
+                <section class="doc-section" id="easyadmin-config">
+                    <h2>EasyAdmin Options</h2>
+                    <pre><code class="language-yaml">audit_trail:
+    easyadmin:
+        permission: 'ROLE_ADMIN'
+        export_limit: 50000</code></pre>
+                    <p>The EasyAdmin export limit keeps browser-triggered downloads bounded. Use
+                        <code>audit:export</code> for larger or full-history exports.</p>
+                    <p>In 4.1+, the old root-level <code>admin_permission</code> and
+                        <code>admin_export_limit</code> options are deprecated. Use the nested
+                        <code>easyadmin</code> options shown above.</p>
+                </section>
+
+                <section class="doc-section" id="transaction-safety">
+                    <h2>Transaction Safety</h2>
+                    <pre><code class="language-yaml">audit_trail:
+    defer_transport_until_commit: true
+    fail_on_transport_error: false
+    fallback_to_database: true</code></pre>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Goal</th>
+                                <th>Useful Settings</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Default write performance</td>
+                                <td><code>defer_transport_until_commit: true</code></td>
+                            </tr>
+                            <tr>
+                                <td>Strict database audit path</td>
+                                <td><code>database.async: false</code> and <code>fail_on_transport_error: true</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>External transport with local safety net</td>
+                                <td><code>fallback_to_database: true</code> with database transport enabled</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="callout warning">
+                        <p>HTTP and queue transports are deferred-phase transports. Setting
+                            <code>defer_transport_until_commit: false</code> does not move them into Doctrine's
+                            <code>onFlush</code> transaction window.</p>
+                    </div>
+
+                    <p>When HTTP or queue transport is enabled and these flags are not set explicitly, the bundle treats
+                        remote delivery as strict by default: <code>fail_on_transport_error</code> becomes
+                        <code>true</code> and <code>fallback_to_database</code> becomes <code>false</code>. Set both
+                        values deliberately for your durability model.</p>
+
+                    <ul>
+                        <li>At least one transport must be enabled when <code>audit_trail.enabled</code> is
+                            <code>true</code>.</li>
+                        <li>Enabling async database or queue transport without <code>symfony/messenger</code> throws a
+                            clear container-build <code>LogicException</code>.</li>
+                        <li>Enabling HTTP transport without <code>symfony/http-client</code> throws a clear
+                            container-build <code>LogicException</code>.</li>
+                        <li>Boolean or status-based soft-delete markers need custom restore handling; the built-in
+                            restore flow clears a nullable timestamp-like field.</li>
+                    </ul>
+                </section>
+
+
+            </article>
+
+            <aside class="docs-toc" data-page-toc></aside>
+        </div>
+    </main>
+
+    <footer class="docs-footer">
+        <div class="container footer-inner">
+            <p><strong>AuditTrailBundle</strong> documentation for 4.x</p>
+            <p>Copyright <span data-year></span>. Built by Rahul Chavan.</p>
+        </div>
+    </footer>
+
+    <script src="../../assets/docs.js"></script>
+</body>
+
+</html>

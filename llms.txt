@@ -1,0 +1,17 @@
+# Rahul Chavan - Symfony & PHP Developer
+
+> Professional portfolio and documentation resources for Rahul Chavan, a backend engineer specializing in Symfony, Doctrine audit logging, and production-ready PHP systems.
+
+## Main Pages
+- [Portfolio Home](https://rcsofttech85.github.io/): Professional overview, core stack, freelance availability, and contact info.
+- [AuditTrailBundle Home](https://rcsofttech85.github.io/symfony-audit-bundle/): An open-source Symfony bundle recording Doctrine ORM entity changes.
+- [AuditTrailBundle Docs](https://rcsofttech85.github.io/audit-trail-bundle/docs/4.x/): Comprehensive documentation for configuring and running the bundle.
+
+## AuditTrailBundle Documentation Sections
+- [Quick Start](https://rcsofttech85.github.io/audit-trail-bundle/docs/4.x/quick-start/): Fast integration guide.
+- [Configuration](https://rcsofttech85.github.io/audit-trail-bundle/docs/4.x/configuration/): Configuring storage, exclusions, and attributes.
+- [Transports](https://rcsofttech85.github.io/audit-trail-bundle/docs/4.x/transports/): Database, HTTP, and queue-based async audit dispatch.
+- [Usage](https://rcsofttech85.github.io/audit-trail-bundle/docs/4.x/usage/): Logging changes, custom metadata, and viewing audit logs.
+- [Admin & Security](https://rcsofttech85.github.io/audit-trail-bundle/docs/4.x/admin-security/): Securing audit log dashboards.
+- [Operations](https://rcsofttech85.github.io/audit-trail-bundle/docs/4.x/operations/): Log rotation, purging, and performance tuning under load.
+- [Upgrade Architecture](https://rcsofttech85.github.io/audit-trail-bundle/docs/4.x/upgrade-architecture/): Database migration and architectural guide.

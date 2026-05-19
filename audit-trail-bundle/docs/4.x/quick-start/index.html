@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Start | AuditTrailBundle 4.x Documentation</title>
+    <meta name="description"
+        content="Quick start for AuditTrailBundle 4.x: install the bundle, run database migrations, and add the Auditable attribute to a Doctrine entity.">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="theme-color" content="#f59e0b">
+    <link rel="canonical" href="https://rcsofttech85.github.io/audit-trail-bundle/docs/4.x/quick-start/">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/docs.css">
+</head>
+
+<body data-doc-page="quick-start">
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="../../../../symfony-audit-bundle/">
+                <span class="brand-mark">AT</span>
+                <span class="brand-copy">
+                    <strong>AuditTrailBundle</strong>
+                    <span>4.x documentation</span>
+                </span>
+            </a>
+
+            <div class="top-links" aria-label="Project links">
+                <a href="../../../../symfony-audit-bundle/"><i class="fas fa-arrow-left"></i> Product</a>
+                <a href="https://github.com/rcsofttech85/AuditTrailBundle" target="_blank" rel="noopener">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://packagist.org/packages/rcsofttech/audit-trail-bundle" target="_blank" rel="noopener">
+                    <i class="fas fa-cube"></i> Packagist
+                </a>
+            </div>
+
+            <div class="header-tools">
+                <div class="search-box">
+                    <input class="search-input" type="search" placeholder="Search docs" data-doc-search
+                        aria-label="Search documentation">
+                    <div class="search-results" data-search-results></div>
+                </div>
+                <select class="version-select" data-version-select aria-label="Select documentation version">
+                    <option value="../../current/">current</option>
+                    <option value="../" selected>4.x</option>
+                </select>
+                <button class="mobile-nav-toggle" type="button" data-mobile-nav-toggle aria-label="Toggle docs navigation"
+                    aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="container docs-layout">
+                        <aside class="docs-sidebar" data-docs-nav>
+                <nav class="docs-nav">
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Start</span>
+                        <a href="/audit-trail-bundle/docs/4.x/">Overview</a>
+                        <a href="/audit-trail-bundle/docs/4.x/quick-start/">Quick Start</a>
+                        <a href="/audit-trail-bundle/docs/4.x/configuration/">Configuration</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Transports</span>
+                        <a href="/audit-trail-bundle/docs/4.x/transports/">Transports</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Usage</span>
+                        <a href="/audit-trail-bundle/docs/4.x/usage/">Usage</a>
+                        <a href="/audit-trail-bundle/docs/4.x/admin-security/">Admin & Security</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Operations</span>
+                        <a href="/audit-trail-bundle/docs/4.x/operations/">Operations</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Reference</span>
+                        <a href="/audit-trail-bundle/docs/4.x/upgrade-architecture/">Upgrade & Architecture</a>
+                    </div>
+                    <div class="docs-nav-section">
+                        <span class="docs-nav-title">Links</span>
+                        <a href="/">Home Portfolio</a>
+                        <a href="/symfony-audit-bundle/">Product Home</a>
+                    </div>
+                </nav>
+            </aside>
+
+            <article class="doc-content">
+                <section class="doc-hero">
+                    <span class="eyebrow">Quick start</span>
+                    <h1>Quick Start</h1>
+                    <p class="lead">Install the bundle, add only the optional Symfony packages you need, migrate the
+                        audit table, and mark your first Doctrine entity with <code>#[Auditable]</code>.</p>
+                    <div class="doc-meta">
+                        <span class="badge is-current">4.x</span>
+                        <span class="badge">Composer package</span>
+                        <span class="badge">Database transport by default</span>
+                    </div>
+                </section>
+
+                <section class="doc-section" id="install-command">
+                    <h2>Install The Package</h2>
+                    <pre><code class="language-bash">composer require rcsofttech/audit-trail-bundle</code></pre>
+
+                    <p>The synchronous database transport works without additional runtime packages. Install optional
+                        packages only for the features you enable.</p>
+
+                    <div class="callout">
+                        <p><strong>Requirements:</strong> AuditTrailBundle 4.x requires PHP 8.4, Symfony 7.4 or 8.0,
+                            Doctrine ORM 3.6, and <code>ext-mbstring</code>.</p>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Package</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Async database transport</td>
+                                <td><code>composer require symfony/messenger</code></td>
+                            </tr>
+                            <tr>
+                                <td>Queue transport</td>
+                                <td><code>composer require symfony/messenger</code></td>
+                            </tr>
+                            <tr>
+                                <td>HTTP transport</td>
+                                <td><code>composer require symfony/http-client</code></td>
+                            </tr>
+                            <tr>
+                                <td>EasyAdmin dashboard</td>
+                                <td><code>composer require easycorp/easyadmin-bundle</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="doc-section" id="database-setup">
+                    <h2>Database Setup</h2>
+                    <p>If you use the default database transport, generate and run a migration for the audit log table.
+                    </p>
+
+                    <pre><code class="language-bash">php bin/console make:migration
+php bin/console doctrine:migrations:migrate</code></pre>
+
+                    <div class="callout">
+                        <p>Async database mode uses a delivery identifier for worker retries. If you enable or upgrade
+                            to async database delivery, generate and run the migration before workers process messages.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="doc-section" id="quick-start">
+                    <h2>Quick Start</h2>
+                    <p>Add <code>#[Auditable]</code> to any Doctrine entity you want to track. You can ignore noisy
+                        properties at the entity level.</p>
+
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Rcsofttech\AuditTrailBundle\Attribute\Auditable;
+
+#[ORM\Entity]
+#[Auditable(ignoredProperties: ['internalCode'])]
+class Product
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    public private(set) ?int $id = null;
+
+    public function __construct(
+        #[ORM\Column(length: 180)]
+        public private(set) string $name,
+
+        #[ORM\Column]
+        public private(set) int $priceInCents,
+
+        #[ORM\Column(length: 40, nullable: true)]
+        public private(set) ?string $internalCode = null,
+    ) {
+    }
+}</code></pre>
+
+                    <p>When the entity is created, updated, deleted, or changed through tracked collections, the bundle
+                        builds an audit log with action, changed fields, old values, new values, user context, request
+                        metadata, and transaction data.</p>
+                </section>
+
+                <section class="doc-section" id="minimal-config">
+                    <h2>Minimal Configuration</h2>
+                    <p>The database transport is enabled by default. Add a config file when you want explicit defaults
+                        or when you enable additional features.</p>
+
+                    <pre><code class="language-yaml"># config/packages/audit_trail.yaml
+audit_trail:
+    enabled: true
+    ignored_properties: ['updatedAt', 'updated_at']
+    retention_days: 365
+    transports:
+        database:
+            enabled: true
+            async: false</code></pre>
+                </section>
+
+
+            </article>
+
+            <aside class="docs-toc" data-page-toc></aside>
+        </div>
+    </main>
+
+    <footer class="docs-footer">
+        <div class="container footer-inner">
+            <p><strong>AuditTrailBundle</strong> documentation for 4.x</p>
+            <p>Copyright <span data-year></span>. Built by Rahul Chavan.</p>
+        </div>
+    </footer>
+
+    <script src="../../assets/docs.js"></script>
+</body>
+
+</html>
