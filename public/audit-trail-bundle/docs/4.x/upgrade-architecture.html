@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upgrade Guides & Architecture | AuditTrailBundle 4.x Documentation</title>
+    <meta name="description"
+        content="Upgrade to AuditTrailBundle 4.x and understand the bundle architecture, runtime services, transports, query layer, and extension points.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <link rel="canonical"
+        href="https://rcsofttech85.github.io/public/audit-trail-bundle/docs/4.x/upgrade-architecture.html">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../assets/docs.css">
+</head>
+
+<body data-doc-page="upgrade-architecture">
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="../../../symfony-audit-bundle.html">
+                <span class="brand-mark">AT</span>
+                <span class="brand-copy">
+                    <strong>AuditTrailBundle</strong>
+                    <span>4.x documentation</span>
+                </span>
+            </a>
+
+            <div class="top-links" aria-label="Project links">
+                <a href="../../../symfony-audit-bundle.html"><i class="fas fa-arrow-left"></i> Product</a>
+                <a href="https://github.com/rcsofttech85/AuditTrailBundle" target="_blank" rel="noopener">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://packagist.org/packages/rcsofttech/audit-trail-bundle" target="_blank" rel="noopener">
+                    <i class="fas fa-cube"></i> Packagist
+                </a>
+            </div>
+
+            <div class="header-tools">
+                <div class="search-box">
+                    <input class="search-input" type="search" placeholder="Search docs" data-doc-search
+                        aria-label="Search documentation">
+                    <div class="search-results" data-search-results></div>
+                </div>
+                <select class="version-select" data-version-select aria-label="Select documentation version">
+                    <option value="../current/index.html">current</option>
+                    <option value="index.html" selected>4.x</option>
+                </select>
+                <button class="mobile-nav-toggle" type="button" data-mobile-nav-toggle aria-label="Toggle docs navigation"
+                    aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="container docs-layout">
+            <aside class="docs-sidebar" data-docs-nav></aside>
+
+            <article class="doc-content">
+                <section class="doc-hero">
+                    <span class="eyebrow">Reference</span>
+                    <h1>Upgrade and architecture notes.</h1>
+                    <p class="lead">Use this page when moving from v3 to v4 or when extending the bundle through
+                        supported contracts instead of patching internals.</p>
+                    <div class="doc-meta">
+                        <span class="badge is-current">4.x</span>
+                        <span class="badge">Upgrade guide</span>
+                        <span class="badge">Extension points</span>
+                    </div>
+                </section>
+
+                <section class="doc-section" id="upgrade-guides">
+                    <h2>Upgrade Guides</h2>
+                    <p>v4 changes a few public APIs and fixes collection-audit behavior for same-flush relation
+                        creation. If your application only uses built-in services and transports, the upgrade is usually
+                        small.</p>
+
+                    <h3 id="v3-to-v4-checklist">v3 To v4 Checklist</h3>
+                    <ol>
+                        <li>Upgrade the package and clear the Symfony container cache.</li>
+                        <li>Run a schema migration before production traffic reaches v4 code.</li>
+                        <li>Update custom code that compares raw action strings to use
+                            <code>Rcsofttech\AuditTrailBundle\Enum\AuditAction</code>.</li>
+                        <li>Review custom implementations of bundle contracts in <code>src/Contract</code>, especially
+                            transports, scheduled audit managers, exporters, and entity ID resolvers.</li>
+                        <li>Update imports for <code>TrackableCollectionInterface</code> to the
+                            <code>Contract</code> namespace if your application imports it directly.</li>
+                        <li>Use nullable unresolved entity IDs; code that needs a concrete ID should call
+                            <code>hasResolvedEntityId()</code> or <code>requireEntityId()</code>.</li>
+                        <li>Verify one same-flush collection add scenario in your application.</li>
+                        <li>Review custom AI processors and any admin UI that renders
+                            <code>context.ai</code> metadata. In 4.3 and newer, prefer
+                            <code>AuditLogReadModelAiProcessorInterface</code>; the legacy
+                            <code>AuditLogAiProcessorInterface</code> remains available for 4.x compatibility but is
+                            deprecated for removal in 5.0.</li>
+                        <li>If custom code manually instantiates <code>EntityProcessor</code>,
+                            <code>AuditQuery</code>, <code>AuditReader</code>, <code>AuditLogMessageFactory</code>, or
+                            <code>AuditLogWriter</code>, update that wiring or prefer Symfony DI.</li>
+                        <li>Historical revert rows created on v3 remain recognized after upgrade, even when
+                            <code>reverted_log_id</code> only exists inside <code>context</code>.</li>
+                        <li>If HTTP or queue transport is enabled, review <code>fail_on_transport_error</code> and
+                            <code>fallback_to_database</code>.</li>
+                    </ol>
+
+                    <pre><code class="language-php">use Rcsofttech\AuditTrailBundle\Enum\AuditAction;
+
+if ($log-&gt;action === AuditAction::Update) {
+    // v4 action comparison
+}</code></pre>
+
+                    <h3 id="v4-contract-changes">v4 Contract Changes To Preserve</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Area</th>
+                                <th>What Changed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Actions</td>
+                                <td><code>AuditLog::$action</code> and public contracts use
+                                    <code>AuditAction</code> instead of raw strings.</td>
+                            </tr>
+                            <tr>
+                                <td>Exporter</td>
+                                <td><code>AuditExporterInterface::exportToStream()</code> returns the exported record
+                                    count as <code>int</code>.</td>
+                            </tr>
+                            <tr>
+                                <td>Scheduled work</td>
+                                <td><code>ScheduledAuditManagerInterface</code> supports pending audit plans for
+                                    collection-sensitive create and update flows; failed-dispatch replace methods live
+                                    behind the internal <code>FailedAuditDispatchRetainerInterface</code>.</td>
+                            </tr>
+                            <tr>
+                                <td>Queue/toggle internals</td>
+                                <td>Queue scheduling and enable/disable responsibilities are split internally into
+                                    <code>AuditQueueManagerInterface</code> and <code>AuditToggleInterface</code>.</td>
+                            </tr>
+                            <tr>
+                                <td>Entity IDs</td>
+                                <td><code>AuditLogInterface::$entityId</code> and
+                                    <code>EntityIdResolverInterface</code> now use nullable unresolved IDs instead of
+                                    placeholder strings.</td>
+                            </tr>
+                            <tr>
+                                <td>Collections</td>
+                                <td>Same-flush relation creation now stores final related identifiers instead of
+                                    placeholder class-name payloads.</td>
+                            </tr>
+                            <tr>
+                                <td>Query layer</td>
+                                <td><code>AuditQuery</code> and <code>AuditReader</code> are thin facades over query
+                                    state, execution, and page materialization services.</td>
+                            </tr>
+                            <tr>
+                                <td>UUID ordering</td>
+                                <td>Manual construction of ordering-sensitive services should provide a UUID v7
+                                    factory so cursor and latest-first reads keep their ordering guarantees.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 id="legacy-v2-to-v3">Legacy v2 To v3 Notes</h3>
+                    <p>If an application still upgrades through v3 first, preserve these migration checks even if the
+                        package repo docs are slimmed down.</p>
+                    <ul>
+                        <li>Async database transport requires the <code>audit_log.delivery_id</code> column and unique
+                            constraint before workers consume messages.</li>
+                        <li>Custom transports must implement <code>send(AuditTransportContext): AuditDeliveryResult</code>
+                            and <code>supports(AuditTransportContext): bool</code>.</li>
+                        <li>EasyAdmin access should be verified against the configured admin permission after upgrade.
+                        </li>
+                        <li>Custom scheduled audit managers need the full public queue/toggle surface and pending
+                            deletion handling expected by the current contract.</li>
+                        <li>Audit event subscribers should subscribe by event class, for example
+                            <code>AuditLogCreatedEvent::class</code>.</li>
+                    </ul>
+
+                    <div class="callout warning">
+                        <p>For versions older than 4.x, use the matching README and docs from the GitHub tag unless
+                            archived public docs are added later.</p>
+                    </div>
+                </section>
+
+                <section class="doc-section" id="architecture">
+                    <h2>Architecture</h2>
+                    <p>Most audit work happens in <code>onFlush</code> and <code>postFlush</code>. The split keeps
+                        change detection close to Doctrine while allowing deferred transport delivery where appropriate.
+                    </p>
+
+                    <div class="card-grid">
+                        <article class="doc-card">
+                            <h3>Flush Processing</h3>
+                            <p><code>AuditSubscriber</code>, <code>AuditOnFlushProcessor</code>,
+                                <code>AuditPostFlushProcessor</code>, and focused entity processors detect and schedule
+                                audit work.</p>
+                        </article>
+                        <article class="doc-card">
+                            <h3>Creation & Dispatch</h3>
+                            <p><code>AuditLogFactory</code>, <code>AuditLogMessageFactory</code>,
+                                <code>AuditDispatcher</code>, <code>EntityAuditDispatchManager</code>,
+                                <code>ScheduledAuditManager</code>, and <code>AuditLogWriter</code> build, schedule,
+                                and deliver audit logs.</p>
+                        </article>
+                        <article class="doc-card">
+                            <h3>Query Layer</h3>
+                            <p><code>AuditReader</code>, <code>AuditQuery</code>, <code>AuditQueryState</code>,
+                                <code>AuditQueryExecutor</code>, and <code>AuditQueryPage</code> split fluent state from
+                                execution.</p>
+                        </article>
+                        <article class="doc-card">
+                            <h3>Admin & Revert</h3>
+                            <p>EasyAdmin services handle presentation, while <code>AuditReverter</code>,
+                                <code>RevertPlanBuilder</code>, and action handlers manage recovery.</p>
+                        </article>
+                    </div>
+
+                    <p>For async database delivery, the message factory preserves the audit row UUID before Messenger
+                        dispatch and the writer reuses it in the worker. This keeps UUID-sorted readers, keyset
+                        pagination, and transaction drilldowns aligned with creation order rather than worker processing
+                        order.</p>
+                </section>
+
+                <section class="doc-section" id="extension-points">
+                    <h2>Extension Points</h2>
+                    <p>Prefer supported contracts when customizing behavior. They are easier to keep stable across
+                        package upgrades than internal services.</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Contract</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>AuditVoterInterface</code></td>
+                                <td>Skip or allow audit records based on runtime logic.</td>
+                            </tr>
+                            <tr>
+                                <td><code>AuditContextContributorInterface</code></td>
+                                <td>Add correlation IDs, app versions, feature flags, or request metadata.</td>
+                            </tr>
+                            <tr>
+                                <td><code>AuditTransportInterface</code></td>
+                                <td>Deliver audit logs to custom storage or external systems.</td>
+                            </tr>
+                            <tr>
+                                <td><code>AuditLogReadModelAiProcessorInterface</code></td>
+                                <td>Attach optional AI-derived metadata under your own namespace using a read-only
+                                    audit-log snapshot.</td>
+                            </tr>
+                            <tr>
+                                <td><code>RevertActionHandlerInterface</code></td>
+                                <td>Customize revert behavior for specific actions or entity shapes.</td>
+                            </tr>
+                            <tr>
+                                <td><code>ScheduledAuditManagerInterface</code></td>
+                                <td>Customize scheduled audit work handling.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="doc-section" id="testing-map">
+                    <h2>Contributor Testing Map</h2>
+                    <ul>
+                        <li>Service logic changes usually need unit tests.</li>
+                        <li>Doctrine lifecycle, flush, or collection behavior needs functional tests.</li>
+                        <li>Container wiring, compiler passes, or extension config changes need integration tests.</li>
+                        <li>Signing and verification changes need compatibility checks against already persisted logs.
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="source-panel" id="source">
+                    <h2>Project Links</h2>
+                    <div class="source-links">
+                        <a class="source-pill" href="https://github.com/rcsofttech85/AuditTrailBundle"
+                            target="_blank" rel="noopener">GitHub</a>
+                        <a class="source-pill"
+                            href="https://github.com/rcsofttech85/AuditTrailBundle/blob/main/CHANGELOG.md"
+                            target="_blank" rel="noopener">Changelog</a>
+                        <a class="source-pill" href="https://github.com/rcsofttech85/AuditTrailBundle/issues"
+                            target="_blank" rel="noopener">Issues</a>
+                    </div>
+                </section>
+            </article>
+
+            <aside class="docs-toc" data-page-toc></aside>
+        </div>
+    </main>
+
+    <footer class="docs-footer">
+        <div class="container footer-inner">
+            <p><strong>AuditTrailBundle</strong> documentation for 4.x</p>
+            <p>Copyright <span data-year></span>. Built by Rahul Chavan.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/docs.js"></script>
+</body>
+
+</html>

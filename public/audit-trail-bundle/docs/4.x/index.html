@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overview | AuditTrailBundle 4.x Documentation</title>
+    <meta name="description"
+        content="Overview of AuditTrailBundle 4.x, a Symfony audit bundle for Doctrine entity history, split-phase delivery, transports, integrity, and recovery.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <link rel="canonical" href="https://rcsofttech85.github.io/public/audit-trail-bundle/docs/4.x/index.html">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../assets/docs.css">
+</head>
+
+<body data-doc-page="index">
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="../../../symfony-audit-bundle.html">
+                <span class="brand-mark">AT</span>
+                <span class="brand-copy">
+                    <strong>AuditTrailBundle</strong>
+                    <span>4.x documentation</span>
+                </span>
+            </a>
+
+            <div class="top-links" aria-label="Project links">
+                <a href="../../../symfony-audit-bundle.html"><i class="fas fa-arrow-left"></i> Product</a>
+                <a href="https://github.com/rcsofttech85/AuditTrailBundle" target="_blank" rel="noopener">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://packagist.org/packages/rcsofttech/audit-trail-bundle" target="_blank" rel="noopener">
+                    <i class="fas fa-cube"></i> Packagist
+                </a>
+            </div>
+
+            <div class="header-tools">
+                <div class="search-box">
+                    <input class="search-input" type="search" placeholder="Search docs" data-doc-search
+                        aria-label="Search documentation">
+                    <div class="search-results" data-search-results></div>
+                </div>
+                <select class="version-select" data-version-select aria-label="Select documentation version">
+                    <option value="../current/index.html">current</option>
+                    <option value="index.html" selected>4.x</option>
+                </select>
+                <button class="mobile-nav-toggle" type="button" data-mobile-nav-toggle aria-label="Toggle docs navigation"
+                    aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="container docs-layout">
+            <aside class="docs-sidebar" data-docs-nav></aside>
+
+            <article class="doc-content">
+                <section class="doc-hero">
+                    <span class="eyebrow">Overview</span>
+                    <h1>AuditTrailBundle 4.x</h1>
+                    <p class="lead">AuditTrailBundle records Doctrine ORM entity changes and stores audit logs. It
+                        captures changes during flush and sends audits after <code>postFlush</code> by default, so
+                        normal writes stay fast while the audit path remains explicit and configurable.</p>
+                    <div class="doc-meta">
+                        <span class="badge is-current"><i class="fas fa-code-branch"></i> current: 4.x</span>
+                        <span class="badge"><i class="fas fa-server"></i> PHP 8.4+</span>
+                        <span class="badge"><i class="fab fa-symfony"></i> Symfony 7.4+ or 8.0+</span>
+                        <span class="badge"><i class="fas fa-database"></i> Doctrine ORM 3.6+</span>
+                    </div>
+                </section>
+
+                <section class="doc-section" id="when-to-use-it">
+                    <h2>When To Use It</h2>
+                    <p>Use AuditTrailBundle when a Symfony application needs reliable history for Doctrine entities,
+                        admin accountability, access auditing, compliance review, transport delivery, or recovery from
+                        accidental writes.</p>
+
+                    <div class="card-grid">
+                        <article class="doc-card">
+                            <h3>Entity History</h3>
+                            <p>Record create, update, delete, soft delete, collection changes, request metadata, and user
+                                context for audited Doctrine entities.</p>
+                        </article>
+                        <article class="doc-card">
+                            <h3>Transport Choice</h3>
+                            <p>Persist locally, dispatch through Messenger, send HTTP payloads, or combine paths with
+                                fallback behavior.</p>
+                        </article>
+                        <article class="doc-card">
+                            <h3>Admin Review</h3>
+                            <p>Use EasyAdmin and Symfony profiler integration to inspect logs without only querying raw
+                                database rows.</p>
+                        </article>
+                        <article class="doc-card">
+                            <h3>Integrity</h3>
+                            <p>Mask sensitive values, sign audit logs, verify stored signatures, and sign transport
+                                payloads.</p>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="doc-section" id="split-phase-model">
+                    <h2>Split-Phase Model</h2>
+                    <p>The bundle separates detection from delivery. That matters because Doctrine lifecycle work has
+                        strict rules about when entities and changesets are safe to inspect or persist.</p>
+
+                    <pre><code class="language-text">Application       Doctrine ORM       AuditTrailBundle       Queue / Storage
+     |                  |                    |                     |
+     | flush()          |                    |                     |
+     |-----------------&gt;|                    |                     |
+     |                  | onFlush            |                     |
+     |                  |-------------------&gt;| Compute diffs       |
+     |                  |                    | Persist ORM-safe    |
+     |                  |                    | audit rows when     |
+     |                  |                    | allowed in-UoW      |
+     |                  |&lt;-------------------|                     |
+     |                  | Execute SQL        |                     |
+     |                  | postFlush          |                     |
+     |                  |-------------------&gt;| Dispatch audit      |
+     |                  |                    | Persist deferred    |
+     |                  |                    | database audits     |
+     | flush() returns  |                    |--------------------&gt;|
+     |&lt;-----------------|                    | Async save</code></pre>
+
+                    <ul>
+                        <li><code>onFlush</code> inspects entity and collection changes.</li>
+                        <li><code>postFlush</code> finalizes deferred work and dispatches supported transports.</li>
+                        <li>Deferred database writes use a dedicated writer instead of re-entering Doctrine
+                            <code>flush()</code>.</li>
+                    </ul>
+                </section>
+
+                <section class="doc-section" id="first-install">
+                    <h2>First Install</h2>
+                    <pre><code class="language-bash">composer require rcsofttech/audit-trail-bundle</code></pre>
+                    <p>Continue with the <a href="quick-start.html">Quick Start</a> for schema migration, optional
+                        transport packages, and a first entity example.</p>
+                </section>
+
+                <section class="source-panel" id="canonical-sources">
+                     <div class="source-links">
+                        <a class="source-pill" href="https://github.com/rcsofttech85/AuditTrailBundle/blob/main/README.md"
+                            target="_blank" rel="noopener">README</a>
+                        <a class="source-pill"
+                            href="https://github.com/rcsofttech85/AuditTrailBundle/blob/main/CHANGELOG.md"
+                            target="_blank" rel="noopener">Changelog</a>
+                        <a class="source-pill" href="https://github.com/rcsofttech85/AuditTrailBundle/issues"
+                            target="_blank" rel="noopener">Issues</a>
+                    </div>
+                </section>
+            </article>
+
+            <aside class="docs-toc" data-page-toc></aside>
+        </div>
+    </main>
+
+    <footer class="docs-footer">
+        <div class="container footer-inner">
+            <p><strong>AuditTrailBundle</strong> documentation for 4.x</p>
+            <p>Copyright <span data-year></span>. Built by Rahul Chavan.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/docs.js"></script>
+</body>
+
+</html>

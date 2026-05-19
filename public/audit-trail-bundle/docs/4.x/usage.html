@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attributes & AuditReader API | AuditTrailBundle 4.x Documentation</title>
+    <meta name="description"
+        content="Use AuditTrailBundle attributes and query audit logs with the AuditReader API in Symfony applications.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <link rel="canonical" href="https://rcsofttech85.github.io/public/audit-trail-bundle/docs/4.x/usage.html">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../assets/docs.css">
+</head>
+
+<body data-doc-page="usage">
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="../../../symfony-audit-bundle.html">
+                <span class="brand-mark">AT</span>
+                <span class="brand-copy">
+                    <strong>AuditTrailBundle</strong>
+                    <span>4.x documentation</span>
+                </span>
+            </a>
+
+            <div class="top-links" aria-label="Project links">
+                <a href="../../../symfony-audit-bundle.html"><i class="fas fa-arrow-left"></i> Product</a>
+                <a href="https://github.com/rcsofttech85/AuditTrailBundle" target="_blank" rel="noopener">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://packagist.org/packages/rcsofttech/audit-trail-bundle" target="_blank" rel="noopener">
+                    <i class="fas fa-cube"></i> Packagist
+                </a>
+            </div>
+
+            <div class="header-tools">
+                <div class="search-box">
+                    <input class="search-input" type="search" placeholder="Search docs" data-doc-search
+                        aria-label="Search documentation">
+                    <div class="search-results" data-search-results></div>
+                </div>
+                <select class="version-select" data-version-select aria-label="Select documentation version">
+                    <option value="../current/index.html">current</option>
+                    <option value="index.html" selected>4.x</option>
+                </select>
+                <button class="mobile-nav-toggle" type="button" data-mobile-nav-toggle aria-label="Toggle docs navigation"
+                    aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="docs-main">
+        <div class="container docs-layout">
+            <aside class="docs-sidebar" data-docs-nav></aside>
+
+            <article class="doc-content">
+                <section class="doc-hero">
+                    <span class="eyebrow">Usage</span>
+                    <h1>Attributes and audit queries.</h1>
+                    <p class="lead">Mark entities with attributes, reduce noisy logs with conditions, track read access,
+                        mask sensitive values, and query audit history with <code>AuditReaderInterface</code>.</p>
+                    <div class="doc-meta">
+                        <span class="badge is-current">4.x</span>
+                        <span class="badge">PHP attributes</span>
+                        <span class="badge">Fluent API</span>
+                    </div>
+                </section>
+
+                <section class="doc-section" id="auditable-attributes">
+                    <h2>Auditable Attributes</h2>
+                    <p>Use <code>#[Auditable]</code> on a Doctrine entity to enable write auditing. The class-level
+                        options let you disable auditing or ignore specific fields.</p>
+
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Rcsofttech\AuditTrailBundle\Attribute\Auditable;
+
+#[ORM\Entity]
+#[Auditable(enabled: true, ignoredProperties: ['internalCode'])]
+class Product
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    public private(set) ?int $id = null;
+
+    public function __construct(
+        #[ORM\Column(length: 180)]
+        public private(set) string $name,
+
+        #[ORM\Column]
+        public private(set) int $priceInCents,
+
+        #[ORM\Column(length: 40, nullable: true)]
+        public private(set) ?string $internalCode = null,
+    ) {
+    }
+}</code></pre>
+
+                    <h3 id="audit-condition">Conditional Auditing</h3>
+                    <p>Use <code>#[AuditCondition]</code> when an entity should be audited only for certain runtime
+                        conditions. Expressions receive <code>object</code>, <code>action</code>,
+                        <code>changeSet</code>, and <code>user</code>. The <code>action</code> variable is the enum
+                        backing value, such as <code>create</code>, <code>update</code>, or <code>delete</code>; custom
+                        PHP voters receive the real <code>AuditAction</code> enum.</p>
+
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+use Doctrine\ORM\Mapping as ORM;
+use Rcsofttech\AuditTrailBundle\Attribute\AuditCondition;
+use Rcsofttech\AuditTrailBundle\Attribute\Auditable;
+
+#[ORM\Entity]
+#[Auditable]
+#[AuditCondition("action != 'update' or object.priceInCents &gt;= 10000")]
+class Product
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    public private(set) ?int $id = null;
+
+    public function __construct(
+        #[ORM\Column]
+        public private(set) int $priceInCents,
+    ) {
+    }
+}</code></pre>
+
+                    <h3 id="custom-voter">Custom Voter</h3>
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Audit;
+
+use App\Entity\Product;
+use Rcsofttech\AuditTrailBundle\Contract\AuditVoterInterface;
+use Rcsofttech\AuditTrailBundle\Enum\AuditAction;
+
+final class ProductAuditVoter implements AuditVoterInterface
+{
+    public function vote(object $entity, AuditAction $action, array $changeSet): bool
+    {
+        if (!$entity instanceof Product || $action !== AuditAction::Update) {
+            return true;
+        }
+
+        $changedFields = array_keys($changeSet);
+
+        return $changedFields !== ['lastViewedAt'];
+    }
+}</code></pre>
+                </section>
+
+                <section class="doc-section" id="access-auditing">
+                    <h2>Access Auditing</h2>
+                    <p><code>#[AuditAccess]</code> tracks sensitive read operations independently from
+                        <code>#[Auditable]</code>. By default, only <code>GET</code> requests are eligible.</p>
+
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+use Doctrine\ORM\Mapping as ORM;
+use Rcsofttech\AuditTrailBundle\Attribute\AuditAccess;
+
+#[ORM\Entity]
+#[AuditAccess(cooldown: 3600, level: 'info', message: 'User accessed sensitive record')]
+class SensitiveDocument
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    public private(set) ?int $id = null;
+
+    public function __construct(
+        #[ORM\Column(length: 255)]
+        public private(set) string $title,
+    ) {
+    }
+}</code></pre>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Default</th>
+                                <th>Meaning</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>cooldown</code></td>
+                                <td><code>0</code></td>
+                                <td>Suppress duplicate access logs for the same user and entity for this many seconds.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>level</code></td>
+                                <td><code>info</code></td>
+                                <td>Log level stored for the access audit.</td>
+                            </tr>
+                            <tr>
+                                <td><code>message</code></td>
+                                <td><code>null</code></td>
+                                <td>Optional human-readable message stored with the access audit.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>Use a cache pool for cross-request cooldowns. Without one, request-level deduplication still
+                        works during the current request.</p>
+
+                    <pre><code class="language-yaml">audit_trail:
+    cache_pool: 'cache.app'
+    audited_methods: ['GET']</code></pre>
+
+                    <h3 id="explicit-read-intent">Explicit Read Intent</h3>
+                    <p>Use explicit read intent when a route loads an <code>#[AuditAccess]</code> entity but the bundle's
+                        route-name heuristics are not enough. Prefer route defaults because they are available before
+                        Symfony resolves controller entity arguments.</p>
+
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Controller\Admin;
+
+use App\Entity\SensitiveDocument;
+use Rcsofttech\AuditTrailBundle\Http\AuditRequestAttributes;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+final class DocumentController extends AbstractController
+{
+    #[Route(
+        '/admin/documents/{id}',
+        name: 'admin_document_detail',
+        defaults: [AuditRequestAttributes::ACCESS_INTENT =&gt; true],
+        methods: ['GET'],
+    )]
+    public function detail(SensitiveDocument $document): Response
+    {
+        return $this-&gt;render('admin/document/detail.html.twig', [
+            'document' =&gt; $document,
+        ]);
+    }
+
+    #[Route(
+        '/admin/documents/{id}/edit',
+        name: 'admin_document_edit',
+        defaults: [AuditRequestAttributes::ACCESS_INTENT =&gt; false],
+        methods: ['GET'],
+    )]
+    public function edit(SensitiveDocument $document): Response
+    {
+        return $this-&gt;render('admin/document/edit.html.twig', [
+            'document' =&gt; $document,
+        ]);
+    }
+}</code></pre>
+
+                    <p>Use <code>true</code> for routes that should count as a real record view and <code>false</code>
+                        for routes that load the entity only to render a form, preview, or workflow screen.</p>
+
+                    <div class="callout">
+                        <p><code>#[AuditAccess]</code> does not require <code>#[Auditable]</code>. If
+                            <code>#[AuditCondition]</code> is present on the same entity, it is still respected and
+                            receives <code>action = "access"</code>.</p>
+                    </div>
+
+                    <p>Access audits are detected from Doctrine <code>postLoad</code> events during the main request and
+                        processed on Symfony's <code>kernel.terminate</code>. The bundle does not perform an extra ORM
+                        <code>flush()</code> from <code>kernel.terminate</code>; deferred database writes use the same
+                        safe writer path as other deferred audits.</p>
+                </section>
+
+                <section class="doc-section" id="collection-tracking">
+                    <h2>Collection Tracking Notes</h2>
+                    <p>The bundle tracks direct Doctrine collection diffs and merges scalar-field plus collection
+                        changes from the same flush into one coherent <code>update</code> audit.</p>
+
+                    <ul>
+                        <li>Same-flush relation creation is resolved after final identifiers exist, so collection
+                            payloads store final related IDs instead of placeholder class names.</li>
+                        <li>Bidirectional associations are safest when deleting a related entity should also audit the
+                            owning entity's collection change.</li>
+                        <li>With unidirectional mappings, database join-table cleanup can still happen correctly, but
+                            Doctrine may not expose enough reverse-relation context for an owner-side collection audit.
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="doc-section" id="sensitive-fields">
+                    <h2>Sensitive Fields</h2>
+                    <p>The bundle can mask values from PHP promoted constructor parameters marked with
+                        <code>#[SensitiveParameter]</code> and fields marked with the bundle's
+                        <code>#[Sensitive]</code> attribute.</p>
+
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+use Doctrine\ORM\Mapping as ORM;
+use Rcsofttech\AuditTrailBundle\Attribute\Auditable;
+use Rcsofttech\AuditTrailBundle\Attribute\Sensitive;
+
+#[ORM\Entity]
+#[Auditable]
+class CustomerProfile
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    public private(set) ?int $id = null;
+
+    public function __construct(
+        #[ORM\Column(length: 255)]
+        #[\SensitiveParameter]
+        private string $passwordHash,
+
+        #[ORM\Column(length: 32)]
+        #[Sensitive(mask: '****')]
+        private string $ssn,
+    ) {
+    }
+}</code></pre>
+                </section>
+
+                <section class="doc-section" id="context-and-events">
+                    <h2>Context And Events</h2>
+                    <p>Every audit log has a JSON <code>context</code> column. Symfony user impersonation via
+                        <code>_switch_user</code> is recorded automatically when available.</p>
+
+                    <h3 id="custom-context">Custom Context</h3>
+                    <p>Add application metadata by implementing <code>AuditContextContributorInterface</code>.
+                        Autoconfigured services are tagged automatically.</p>
+
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Audit;
+
+use Rcsofttech\AuditTrailBundle\Contract\AuditContextContributorInterface;
+use Rcsofttech\AuditTrailBundle\Enum\AuditAction;
+
+final class RequestContextContributor implements AuditContextContributorInterface
+{
+    public function contribute(object $entity, AuditAction $action, array $changeSet): array
+    {
+        return [
+            'app_version' =&gt; '2026.05',
+            'correlation_id' =&gt; $_SERVER['HTTP_X_REQUEST_ID'] ?? null,
+        ];
+    }
+}</code></pre>
+
+                    <h3 id="audit-events">Audit Events</h3>
+                    <p>Use events for integration points around creation, transport failure, and Messenger delivery.
+                    </p>
+
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\EventSubscriber;
+
+use Rcsofttech\AuditTrailBundle\Event\AuditDeliveryFailedEvent;
+use Rcsofttech\AuditTrailBundle\Event\AuditLogCreatedEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+final class AuditOperationsSubscriber implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            AuditLogCreatedEvent::class =&gt; 'onAuditLogCreated',
+            AuditDeliveryFailedEvent::class =&gt; 'onAuditDeliveryFailed',
+        ];
+    }
+
+    public function onAuditLogCreated(AuditLogCreatedEvent $event): void
+    {
+        $event-&gt;auditLog-&gt;context = [
+            ...$event-&gt;auditLog-&gt;context,
+            'node' =&gt; gethostname(),
+        ];
+    }
+
+    public function onAuditDeliveryFailed(AuditDeliveryFailedEvent $event): void
+    {
+        error_log($event-&gt;transportError-&gt;getMessage());
+    }
+}</code></pre>
+
+                    <h3 id="optional-ai-metadata">Optional AI Metadata</h3>
+                    <p>AuditTrailBundle is AI-ready without depending on Symfony AI or any provider package. If you
+                        want AI-derived labels, summaries, or anomaly metadata, implement
+                        <code>AuditLogReadModelAiProcessorInterface</code>. The bundle stores returned metadata under
+                        <code>context.ai.&lt;namespace&gt;</code> and continues auditing if that optional metadata is
+                        unavailable.</p>
+                    <p>A separate bridge bundle or application service can implement this hook with Symfony AI or any
+                        other provider. The core bundle only owns the extension point and the audit-log read model.</p>
+
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Audit;
+
+use Rcsofttech\AuditTrailBundle\Contract\AuditLogReadModelAiProcessorInterface;
+use Rcsofttech\AuditTrailBundle\Query\AuditLogReadModel;
+
+final class AuditRiskProcessor implements AuditLogReadModelAiProcessorInterface
+{
+    public function getNamespace(): string
+    {
+        return 'risk';
+    }
+
+    public function processAuditLog(AuditLogReadModel $audit): array
+    {
+        return [
+            'summary' =&gt; sprintf('%s %s', $audit-&gt;action-&gt;value, $audit-&gt;entityClass),
+            'severity' =&gt; 'medium',
+            'anomaly_score' =&gt; 0.35,
+            'changed_fields' =&gt; $audit-&gt;changedFields,
+        ];
+    }
+}</code></pre>
+                    <ul>
+                        <li>Return structured metadata only; do not make audit delivery depend on an AI provider.</li>
+                        <li>Use a stable namespace so multiple processors can coexist under <code>context.ai</code>.</li>
+                        <li>The read model includes the action, entity class and ID, created time, user ID, username,
+                            IP address, user agent, old/new values, changed fields, transaction hash, and current audit
+                            context.</li>
+                        <li>AI processors run only in delivery-safe phases such as <code>post_flush</code>,
+                            <code>batch_flush</code>, and <code>manual_flush</code>.</li>
+                        <li>If AI metadata alone would exceed context limits, context normalization removes only the
+                            <code>ai</code> payload and preserves the rest of the audit context.</li>
+                        <li><code>AuditLogAiProcessorInterface</code> remains available for 4.x backward
+                            compatibility, but it is deprecated since 4.3 and will be removed in 5.0.</li>
+                    </ul>
+                </section>
+
+                <section class="doc-section" id="audit-reader-api">
+                    <h2>AuditReader API</h2>
+                    <p><code>AuditReaderInterface</code> is the main read API. Query methods are chainable and return
+                        immutable query objects. Object helpers such as <code>getHistoryFor()</code>,
+                        <code>getLatestFor()</code>, and <code>hasHistoryFor()</code> resolve Doctrine proxies and lazy
+                        subclasses back to the mapped entity class before querying.</p>
+
+                    <pre><code class="language-php">&lt;?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use Rcsofttech\AuditTrailBundle\Contract\AuditReaderInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+final class ProductAuditController extends AbstractController
+{
+    public function __construct(
+        private readonly AuditReaderInterface $auditReader,
+    ) {
+    }
+}</code></pre>
+
+                    <h3 id="entity-history">Entity History</h3>
+                    <pre><code class="language-php">$product = $productRepository-&gt;find(123);
+$history = $this-&gt;auditReader-&gt;getHistoryFor($product);
+
+foreach ($history as $entry) {
+    printf(
+        "%s changed by %s at %s\n",
+        $entry-&gt;action,
+        $entry-&gt;username ?? 'system',
+        $entry-&gt;createdAt-&gt;format('Y-m-d H:i:s')
+    );
+}</code></pre>
+
+                    <h3 id="custom-query">Custom Query</h3>
+                    <pre><code class="language-php">use App\Entity\Product;
+use Rcsofttech\AuditTrailBundle\Enum\AuditAction;
+
+$recentPriceChanges = $this-&gt;auditReader
+    -&gt;forEntity(Product::class)
+    -&gt;action(AuditAction::Update)
+    -&gt;changedField('priceInCents')
+    -&gt;since(new \DateTimeImmutable('-30 days'))
+    -&gt;limit(50)
+    -&gt;getResults();</code></pre>
+
+                    <h3 id="diff-inspection">Diff Inspection</h3>
+                    <pre><code class="language-php">$entry = $this-&gt;auditReader
+    -&gt;forEntity(Product::class, '123')
+    -&gt;updates()
+    -&gt;getFirstResult();
+
+if ($entry?->hasFieldChanged('priceInCents')) {
+    $oldPrice = $entry-&gt;getOldValue('priceInCents');
+    $newPrice = $entry-&gt;getNewValue('priceInCents');
+}</code></pre>
+
+                    <h3 id="cursor-pagination">Cursor Pagination</h3>
+                    <pre><code class="language-php">$query = $this-&gt;auditReader
+    -&gt;forEntity(Product::class)
+    -&gt;limit(25);
+
+$pageOne = $query-&gt;getResults();
+$nextCursor = $query-&gt;getNextCursor();
+
+if ($nextCursor !== null) {
+    $pageTwo = $this-&gt;auditReader
+        -&gt;forEntity(Product::class)
+        -&gt;after($nextCursor)
+        -&gt;limit(25)
+        -&gt;getResults();
+}</code></pre>
+
+                    <div class="callout">
+                        <p><code>limit()</code> must be greater than zero, and cursor values must be valid audit-log
+                            UUIDs. <code>changedField()</code> uses native JSON predicates on MySQL, PostgreSQL, and
+                            SQLite, with a batched in-memory fallback elsewhere.</p>
+                    </div>
+
+                    <h3 id="collection-helpers">Collection Helpers</h3>
+                    <pre><code class="language-php">$audits = $this-&gt;auditReader
+    -&gt;forEntity(Product::class)
+    -&gt;between(new \DateTimeImmutable('-30 days'), new \DateTimeImmutable())
+    -&gt;getResults();
+
+$priceChanges = $audits-&gt;filter(fn ($entry) =&gt; $entry-&gt;hasFieldChanged('priceInCents'));
+$byAction = $audits-&gt;groupByAction();
+$first = $audits-&gt;first();
+$last = $audits-&gt;last();
+$count = $audits-&gt;count();
+$empty = $audits-&gt;isEmpty();</code></pre>
+
+                    <h3 id="existence-checks">Existence Checks</h3>
+                    <pre><code class="language-php">$hasDeletes = $this-&gt;auditReader
+    -&gt;forEntity(Product::class)
+    -&gt;deletes()
+    -&gt;exists();
+
+$hasHistory = $this-&gt;auditReader-&gt;hasHistoryFor($product);</code></pre>
+
+                    <p><code>changedField()</code> supports forward keyset pagination with <code>after()</code>.
+                        Reverse pagination with <code>before()</code> is rejected for changed-field queries because the
+                        bundle cannot keep that filter stable across database-native and fallback matching paths.</p>
+                </section>
+
+
+            </article>
+
+            <aside class="docs-toc" data-page-toc></aside>
+        </div>
+    </main>
+
+    <footer class="docs-footer">
+        <div class="container footer-inner">
+            <p><strong>AuditTrailBundle</strong> documentation for 4.x</p>
+            <p>Copyright <span data-year></span>. Built by Rahul Chavan.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/docs.js"></script>
+</body>
+
+</html>
